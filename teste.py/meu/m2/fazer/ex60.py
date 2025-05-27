@@ -1,6 +1,10 @@
+# from math import factorial; x = int(input('Digite um numero: ')); print(factorial(x))
 r = int(input('Digite um numero: '))
-x = t = 0
+t = r - 1
+l = []
 while t != 1:
-    t = r - 1
-    x = r * t
-print(x)
+    z = r * t
+    r = z
+    l.append(r)
+    t -= 1
+print(l)
