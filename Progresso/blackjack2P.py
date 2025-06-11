@@ -119,4 +119,5 @@ def BlackJack2():
         print(f'Empate entre o {player2} e o Dealer!')
     else:
         print('Empate')
+    sleep(2)
 BlackJack2()
