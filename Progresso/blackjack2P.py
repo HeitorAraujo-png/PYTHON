@@ -8,8 +8,6 @@ def BlackJack2():
         while total > 21 and ases > 0:
             total -= 10
             ases -= 1
-        if total > 21:
-            total = 0
         return total
     def cards_deal():
         '''Escolhe uma carta aleatoria do baralho'''
@@ -32,7 +30,7 @@ def BlackJack2():
         blackjack_player1 = True
     cards_player2 = [cards_deal(), cards_deal()]
     if cards_player2 == [11, 11]:
-        cards_player2[1] == 1
+        cards_player2[1] = 1
     total_player2 = soma(cards_player2)
     if total_player2 == 21 and len(cards_player2) == 2:
         blackjack_player2 == True
@@ -47,15 +45,11 @@ def BlackJack2():
         if total > 21:
             print(f'Você estourou! Você fez uma pontuação de {total} (Maior que 21)')
             print('\n' * 20)
-            total = 0
             return False, player, total
         return True, player, total
     while p1 and p2:
         while p1:
-            if total_player1 == 0:
-                print(f'{player1} Estourou! ')
-                p1 = False
-            condicao1 = input(f'PLAYER 1\nAs cartas do dealer são: {cards_dealer[0]}\nAs cartas do {player2} são: {cards_player2}, total: {total_player2}\nSuas cartas são: {cards_player1}, Pontos {player1} {total_player1}\nDeseja pegar mais uma carta? [S/N] ').lower().strip()
+            condicao1 = input(f'PLAYER 1\nAs cartas do dealer são: {cards_dealer[0]}\nAs cartas do {player2} são: {cards_player2}, total: {total_player2}\nSuas cartas são: {cards_player1}, Pontos {player1}: {total_player1}\nDeseja pegar mais uma carta? [S/N] ').lower().strip()
             if condicao1 == 's':
                 p1, cards_player1, total_player1 = jogo(player=cards_player1, total=total_player1)
                 print('\n' * 20)
@@ -65,10 +59,10 @@ def BlackJack2():
             else:
                 print('Opção invalida! Tente novamente.')
                 print('\n' * 20)
+            if total_player1 > 21:
+                print(f'{player1} Estourou! ')
+                p1 = False
         while p2:
-            if total_player2 == 0:
-                print(f'{player2} Estourou! ')
-                p2 = False
             condicao2 = input(f'PLAYER 2\nAs cartas do dealer são: {cards_dealer[0]}\nAs cartas do {player1} são: {cards_player1}, total : {total_player1}\nSuas cartas são: {cards_player2}, Pontos {player2} {total_player2}\nDeseja pegar mais uma carta? [S/N] ').lower().strip()
             if condicao2 == 's':
                 p2 , cards_player2, total_player2 = jogo(player=cards_player2, total=total_player2)
@@ -79,11 +73,25 @@ def BlackJack2():
             else:
                 print('Opção invalida! Tente novamente.')
                 print('\n' * 20)
+            if total_player2 > 21:
+                print(f'{player2} Estourou! ')
+                p2 = False
     while soma(cards_dealer) < 17:
         cards_dealer.append(random.choice(cards))
     total_dealer = soma(cards_dealer)
+    estourou_p1 = total_player1 > 21
+    estourou_p2 = total_player2 > 21
+    estourou_dealer = total_dealer > 21
     print(f'Cartas do dealer {cards_dealer}, {total_dealer} Pontos.\nCartas do(a) {player1}: {cards_player1}, {total_player1} Pontos.\nCartas do(a) {player2}: {cards_player2},{total_player2} Pontos.')
-    if blackjack_dealer and blackjack_player1 and blackjack_player2:
+    if estourou_p1 and estourou_p2 and estourou_dealer:
+        print('Todo mundo da mesa estourou!')
+    elif estourou_p1 and estourou_p2:
+        print(f'{player1} e {player2} estouraram! \nDealer ganha.')
+    elif estourou_p2 and estourou_dealer:
+        print(f'{player2} e Dealer estouraram! \n {player1} ganhou.')
+    elif estourou_p1 and estourou_dealer:
+        print(f'{player1} e Dealer estouraram! {player2} Ganhou.')
+    elif blackjack_dealer and blackjack_player1 and blackjack_player2:
         print(f'Todos da mesa tem um blackjack!!!\nEmpate')
     elif blackjack_dealer and blackjack_player2:
         print(f'O dealer e o {player2} tem blackjack!!!\n {player1} perder\nDelaer e {player2} ficam empatados')
