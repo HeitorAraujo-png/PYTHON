@@ -68,8 +68,8 @@ class Contatos:   # classe para tudo que vamos usar de importante
         # E eu te digo "Não", porque no primeiro laço nos chamos só 1 linha, assim modificando apenas ela
                 else:
         # Agora se a string que estamos procurando estiver na linha
-                    achou = True
         # A linha é "apagada" porque ela não vai ser escrita no "novo" arquivo
+                    achou = True
         # Achamos? Sim? Então é True
             
             
