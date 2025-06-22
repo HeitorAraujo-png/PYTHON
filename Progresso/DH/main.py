@@ -8,9 +8,9 @@ cor = colorgram.extract("maluco.jpg", 100)
 ponto_zero = -150.00
 end = len(cor)
 lista_cores = []
-tt = Turtle()
-tt.pensize(20)
-tt.speed(0)
+frank = Turtle()
+frank.pensize(20)
+frank.speed(0)
 colormode(255)
 for i in range(0, end):
     color = cor[i]
@@ -20,20 +20,20 @@ for i in range(0, end):
 def rgb_random():
     x = choice(lista_cores)
     rgb = (x[0],x[1],x[2])
-    return tt.pencolor(rgb)
-def ponto():
-    tt.pendown()
+    return frank.pencolor(rgb)
+def pintar():
+    frank.pendown()
     rgb_random()
-    tt.forward(0)
-    tt.penup()
+    frank.forward(0)
+    frank.penup()
 def andando():
     ponto()
     for i in range (1, 8):
-        tt.forward(25)
-        ponto()
+        frank.forward(25)
+        pintar()
 def teletransportar():
     global ponto_zero
-    tt.teleport(-150.00, ponto_zero)
+    frank.teleport(-150.00, ponto_zero)
     andando()
 for i in range(1,6):
     teletransportar()
