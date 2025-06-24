@@ -82,7 +82,7 @@ class Contatos:
         print('backup concluido')
     def SeeBackup(self):
         if self.bkp == True:
-            with open('dataBKP.txt', 'w') as bkp:
+            with open('dataBKP.txt', 'r') as bkp:
                 print(bkp.read())
         else:
           print('Faça o backup primeiramente!')      
