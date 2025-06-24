@@ -96,5 +96,6 @@ class Menu:
     4. Apagar Todos os Contatos (Kamikaze)
     5. Apagar contato
     6. BACKUP
-    7. Sair'''
+    7. VER BACKUP
+    8. Sair'''
 )
