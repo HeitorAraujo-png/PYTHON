@@ -158,7 +158,7 @@ class Contatos:
     def SeeBackup(self):
         if self.bkp == True:
         # SE tem backup
-            with open('dataBKP.txt', 'w') as bkp:
+            with open('dataBKP.txt', 'r') as bkp:
                 print(bkp.read())
                 # imprime o backup
         else:
