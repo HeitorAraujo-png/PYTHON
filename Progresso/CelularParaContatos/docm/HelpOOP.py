@@ -12,7 +12,7 @@ class Contatos:
         # Mostra que não tem backup feito
         self.contato = input('Escreva o nome do seu contato: ')
         self.numero = input('Escreva o numero do seu contato: ')
-        # O lado possitivo de utilizarmos o self ao inves de uma variavel comum é que
+        # O lado positivo de utilizarmos o self ao inves de uma variavel comum é que
         # Ao utilizarmos o self.exemplo como uma "variavel" ela vira global somente na CLASSE que foi declarada
         # Então ela pode ser acessa por qualquer outro metodo dessa classe
         
