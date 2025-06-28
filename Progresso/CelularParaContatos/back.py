@@ -11,11 +11,11 @@ class Contatos:
         with open('data.txt', 'a') as arquivo:
             arquivo.writelines(f'Contato: {self.contato} , Numero: {self.numero}')
             arquivo.write('\n')
-    def ler(self): 
+    def Ler(self): 
         with open('data.txt', 'r') as arquivo: 
             lista = arquivo.read() 
             print(lista)
-    def kamikaze(self, adm):
+    def Kamikaze(self, adm):
         continua = True
         self.user_acesso = False
         self.admin_acesso = adm
@@ -97,13 +97,13 @@ class Contatos:
                             with open('data.txt', 'w') as arquivo:
                                 arquivo.write('') 
                             continua = False               
-    def pesquisa(self): 
+    def Pesquisa(self): 
         cade = input('Qual contato ou numero você deseja achar? ').strip()
         with open('data.txt', 'r') as arquivo:
             for linha in arquivo: 
                 if cade in linha: 
                     print(linha) 
-    def deletar(self): 
+    def Deletar(self): 
         while self.user_acesso != True:
             user = input('Digite seu usuario: ').strip()
             tentativas = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
@@ -131,7 +131,7 @@ class Contatos:
                 print('Contato deletado! ')
             else: 
                 print('Contato não foi encontrado')    
-    def backup(self):
+    def Backup(self):
         while self.user_acesso != True:
             user = input('Digite seu usuario: ').strip()
             tentativas = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
@@ -190,26 +190,14 @@ class Segurança:
                         else:
                             break
                     while True:
-                        erro = []
-                        self.senha = input('Digite sua senha: ').strip()
-                        confirma = input('Digite novamente sua senha: ').strip()
-                        if confirma != self.senha:
-                            erro.append('As senhas devem ser iguais')
-                        if len(self.senha) < 8:
-                            erro.append('A senha deve ter pelo menos 8 caracteres')
-                        if not search(r'\d', self.senha):
-                            erro.append('A senha deve ter ao menos 1 digito')
-                        if not search(r'[A-Z]', self.senha):
-                            erro.append('A senha deve ter ao menos uma letra maiuscula')
-                        if not search(r'[a-z]', self.senha):
-                            erro.append('A senha deve ter ao menos uma letra minuscula')
-                        if not erro:
+                        verifica = self.VerificaSenha()
+                        if verifica == True:
                             with open('AdmUser.txt', 'a') as cadastrar:
                                 cadastrar.writelines(f'Usuario: {self.user} | Senha: {self.senha} | Acesso: {self.Acesso} \n')
                             self.user_acesso = True
                             return
                         else:
-                            print(', '.join(erro),'.')
+                            print(', '.join(verifica),'.')
             elif definir == 'LOGIN':
                 while True:
                     with open('AdmUser.txt', 'r') as arquivo:
@@ -233,20 +221,51 @@ class Segurança:
                         self.user_acesso = self.senha = self.user = False
                         return
             else:
-                print('Tente novamente!')            
-    def verifica(self):
+                print('Tente novamente!')
+    def VerificaSenha(self):
+        erro = []
+        senha = input('Digite a senha desse usuario: ').strip()
+        confirma = input('Digite novamente a senha: ').strip()
+        if confirma != senha:
+            erro.append('As senhas devem ser iguais')
+        if len(senha) < 8:
+            erro.append('A senha deve ter pelo menos 8 caracteres')
+        if not search(r'\d', senha):
+            erro.append('A senha deve ter ao menos 1 digito')
+        if not search(r'[A-Z]', senha):
+            erro.append('A senha deve ter ao menos uma letra maiuscula')
+        if not search(r'[a-z]', senha):
+            erro.append('A senha deve ter ao menos uma letra minuscula')
+        if not erro:
+            return erro, senha
+        else:
+            print(', '.join(erro),'.')
+            return erro, senha
+    def VerificaAdmin(self):
+        while True:
+            usuario = input('Digite seu usuario (ADMIM): ').strip()
+            senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
+            if senha.lower() != 'sair':
+                with open('AdmUser.txt', 'r') as log:
+                    for linha in log:
+                        if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
+                            return True
+            else:
+                return False
+            print('Usuario ou senha invalida')
+    def Verifica(self):
         if self.user_acesso:
             return self.user_acesso, self.senha, self.user
         else:
             return False, self.senha, self.user     
-    def adm(self):
+    def Adm(self):
         return self.admin_acesso
     def AcessoAdm(self):
         if self.admin_acesso:
             while True:
                 usuario = input('Digite seu usuario (ADMIM): ').strip()
                 senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
+                if senha.lower() != 'sair':
                     with open('AdmUser.txt', 'r') as log:
                         for linha in log:
                             if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
@@ -283,7 +302,7 @@ class Segurança:
             while True:
                 usuario = input('Digite seu usuario (ADMIM): ').strip()
                 senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
+                if senha.lower() != 'sair':
                     with open('AdmUser.txt', 'r') as log:
                         for linha in log:
                             if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
@@ -310,7 +329,7 @@ class Segurança:
             while True:
                 usuario = input('Digite seu usuario (ADMIM): ').strip()
                 senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
+                if senha.lower() != 'sair':
                     with open('AdmUser.txt', 'r') as log:
                         for linha in log:
                             if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
@@ -329,30 +348,18 @@ class Segurança:
                                             if Password == False or User == False:
                                                 print('Usuario ou senha invalido! Tente novamente.')
                                     while User and Password:
-                                        erro = []
-                                        senha = input('Digite a nova senha desse usuario senha: ').strip()
-                                        confirma = input('Digite novamente sua senha: ').strip()
-                                        if confirma != senha:
-                                            erro.append('As senhas devem ser iguais')
-                                        if len(senha) < 8:
-                                            erro.append('A senha deve ter pelo menos 8 caracteres')
-                                        if not search(r'\d', senha):
-                                            erro.append('A senha deve ter ao menos 1 digito')
-                                        if not search(r'[A-Z]', senha):
-                                            erro.append('A senha deve ter ao menos uma letra maiuscula')
-                                        if not search(r'[a-z]', senha):
-                                            erro.append('A senha deve ter ao menos uma letra minuscula')
-                                        if not erro:
+                                        verificar, senha = self.VerificaSenha()
+                                        if not verificar:
                                             break
                                         else:
-                                            print(', '.join(erro),'.')
+                                            print(', '.join(verificar),'.')
                                     with open('AdmUser.txt', 'r') as log:
                                         texto = log.readlines()
                                     with open('AdmUser.txt', 'w') as escreve:
                                         for linha in texto:
                                             fatiado = linha.split()
                                             if f'Usuario: {user}' in linha and f'Senha: {password}' in linha:
-                                                escreve.write(f'Usuario: {user} | Senha: {confirma} | Acesso: {fatiado[7]} \n')
+                                                escreve.write(f'Usuario: {user} | Senha: {senha} | Acesso: {fatiado[7]} \n')
                                                 print(f'Senha trocada!')
                                             else:
                                                 escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
@@ -364,7 +371,7 @@ class Segurança:
             while True:
                 usuario = input('Digite seu usuario (ADMIM): ').strip()
                 senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
+                if senha.lower() != 'sair':
                     with open('AdmUser.txt', 'r') as log:
                         for login in log:
                             if f'Usuario: {usuario}' in login and f'Senha: {senha}' in login and f'Acesso: ADMIN' in login:
@@ -388,7 +395,7 @@ class Segurança:
             while True:
                 usuario = input('Digite seu usuario (ADMIM): ').strip()
                 senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
+                if senha.lower() != 'sair':
                     with open('AdmUser.txt', 'r') as log:
                         for linha in log:
                             if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
@@ -416,99 +423,58 @@ class Segurança:
                     break    
     def CriaVariosUser(self):
         if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
+            condicao = self.VerificaAdmin()
+            while condicao:
+                while True:
+                    Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
+                    achou = False
+                    if Cria != 'Sair':
+                        return
                     with open('AdmUser.txt', 'r') as log:
-                        for linha in log:
-                            if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
-                                while True:
-                                    while True:
-                                        Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
-                                        achou = False
-                                        if Cria != 'Sair':
-                                            return
-                                        with open('AdmUser.txt', 'r') as log:
-                                            texto = log.readlines()
-                                        for linha in texto:
-                                            if f'Usuario: {Cria}' in linha:
-                                                achou = True
-                                        if achou:
-                                            print(f'Nome de usuario "{Cria}" já cadastrado. Tente outro...')
-                                        else:
-                                            break
-                                    while True:
-                                        erro = []
-                                        senha = input('Digite a senha desse usuario: ')
-                                        confirma = input('Digite novamente a senha: ')
-                                        if confirma != senha:
-                                            erro.append('As senhas devem ser iguais')
-                                        if len(senha) < 8:
-                                            erro.append('A senha deve ter pelo menos 8 caracteres')
-                                        if not search(r'\d', senha):
-                                            erro.append('A senha deve ter ao menos 1 digito')
-                                        if not search(r'[A-Z]', senha):
-                                            erro.append('A senha deve ter ao menos uma letra maiuscula')
-                                        if not search(r'[a-z]', senha):
-                                            erro.append('A senha deve ter ao menos uma letra minuscula')
-                                        if not erro:
-                                            break
-                                        else:
-                                            print(', '.join(erro),'.')
-                                    with open('AdmUser.txt', 'a') as escreve:
-                                        escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: User \n')
-                                        self.user_acesso = True
-                else:
-                    return
+                        texto = log.readlines()
+                    for linha in texto:
+                        if f'Usuario: {Cria}' in linha:
+                            achou = True
+                    if achou:
+                        print(f'Nome de usuario "{Cria}" já cadastrado. Tente outro...')
+                    else:
+                        break
+                while True:
+                    verificar, senha = self.VerificaSenha()
+                    if not verificar:
+                        break
+                    else:
+                        print(', '.join(verificar),'.')
+                with open('AdmUser.txt', 'a') as escreve:
+                    escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: User \n')
+                    self.user_acesso = True
     def CriaVariosAdmin(self):
         if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha != 'Sair':
-                    with open('AdmUser.txt', 'r') as log:
-                        for linha in log:
-                            if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
-                                while True:
-                                    while True:
-                                        Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
-                                        achou = False
-                                        if Cria != 'Sair':
-                                            return
-                                        with open('AdmUser.txt', 'r') as log:
-                                            texto = log.readlines()
-                                        for linha in texto:
-                                            if f'Usuario: {Cria}' in linha:
-                                                achou = True
-                                        if achou:
-                                            print(f'Nome de usuario "{Cria}" já cadastrado. Tente outro...')
-                                        else:
-                                            break
-                                    while True:
-                                        erro = []
-                                        senha = input('Digite a senha desse usuario: ').strip()
-                                        confirma = input('Digite novamente a senha: ').strip()
-                                        if confirma != senha:
-                                            erro.append('As senhas devem ser iguais')
-                                        if len(senha) < 8:
-                                            erro.append('A senha deve ter pelo menos 8 caracteres')
-                                        if not search(r'\d', senha):
-                                            erro.append('A senha deve ter ao menos 1 digito')
-                                        if not search(r'[A-Z]', senha):
-                                            erro.append('A senha deve ter ao menos uma letra maiuscula')
-                                        if not search(r'[a-z]', senha):
-                                            erro.append('A senha deve ter ao menos uma letra minuscula')
-                                        if not erro:
-                                            break
-                                        else:
-                                            print(', '.join(erro),'.')
-                                    with open('AdmUser.txt', 'a') as escreve:
-                                        escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: ADMIN \n')
-                                        self.user_acesso = True
-                                        self.admin_acesso = True
+            condicao = self.VerificaAdmin()
+            while condicao:
+                Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
+                achou = False
+                if Cria != 'Sair':
+                    return
+                with open('AdmUser.txt', 'r') as log:
+                    texto = log.readlines()
+                for linha in texto:
+                    if f'Usuario: {Cria}' in linha:
+                        achou = True
+                if achou:
+                    print(f'Nome de usuario "{Cria}" já cadastrado. Tente outro...')
                 else:
-                    return        
+                    break
+            while True:
+                verifica, senha = self.VerificaSenha()
+                if not verifica:
+                    break
+                else:
+                    print(', '.join(verifica),'.')
+            with open('AdmUser.txt', 'a') as escreve:
+                escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: ADMIN \n')
+                self.user_acesso = True
+                self.admin_acesso = True        
     def TabelaUserAdmin(self):
          with open('AdmUser.txt', 'r') as log:
             for linha in log:
@@ -524,9 +490,11 @@ class Segurança:
                 if f'Acesso: ADMIN' in linha:
                     print(f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}")
     def TabelaSecreta(self):
-        with open('AdmUser.txt', 'r') as ler:
-            self.leitura = ler.read()
-        print(self.leitura)
+        condicao = self.VerificaAdmin()
+        if condicao:
+            with open('AdmUser.txt', 'r') as ler:
+                self.leitura = ler.read()
+            print(self.leitura)
 class Menu:
     def __init__(self, adm):
         if adm:
