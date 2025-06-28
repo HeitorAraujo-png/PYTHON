@@ -1,9 +1,9 @@
 from back import Contatos, Menu, Segurança
 from time import sleep
 login = Segurança()
-adm = login.adm()
+adm = login.Adm()
 Verdade = True
-acesso, senha, user = login.verifica()
+acesso, senha, user = login.Verifica()
 if acesso == False:
     Verdade = False
 if Verdade:
@@ -20,19 +20,19 @@ if Verdade:
             sleep(2)
         elif x == 3:
             print('\n' * 10)
-            fone.pesquisa()
+            fone.Pesquisa()
             sleep(2)
         elif x == 4:
             print('\n' * 10)
-            fone.kamikaze(adm=adm)
+            fone.Kamikaze(adm=adm)
             sleep(2)
         elif x == 5:
             print('\n' * 10)
-            fone.deletar()
+            fone.Deletar()
             sleep(2)
         elif x == 6:
             print('\n' * 10)
-            fone.backup()
+            fone.Backup()
             sleep(2)
         elif x == 7:
             print('\n' * 10)
@@ -43,7 +43,7 @@ if Verdade:
             print('Finalizando o programa...')
             sleep(2)
             break
-        if login.adm():
+        if login.Adm():
             if x == 123321:
                 login.AcessoAdm()
                 sleep(1)
@@ -74,9 +74,12 @@ if Verdade:
             elif x == 99:
                 login.TabelaAdmin()
                 sleep(1)
-            elif x == 000:
+            elif x == 'SECRET':
                 login.TabelaSecreta()
                 sleep(1)
+            else:
+                print('\n' * 10)
+                print('Seleção invalida! Tente novamente.')
         else:
             print('\n' * 10)
             print('Seleção invalida! Tente novamente.')
