@@ -2,15 +2,17 @@ from re import search
 # O codigo vai ser documentado ainda! Aguarde ate as proximas atualizações...
 class Contatos:      
     def __init__(self, acesso, senha, user):
-        self.bkp = False
-        self.user_acesso = acesso
-        self.senha = senha
-        self.user = user
-        self.contato = input('Escreva o nome do seu contato: ')
-        self.numero = input('Escreva o numero do seu contato: ')
-        with open('data.txt', 'a') as arquivo:
-            arquivo.writelines(f'Contato: {self.contato} , Numero: {self.numero}')
-            arquivo.write('\n')
+        acesso, senha, user = Segurança.Verifica()
+        if acesso:
+            self.bkp = False
+            self.user_acesso = acesso
+            self.senha = senha
+            self.user = user
+            self.contato = input('Escreva o nome do seu contato: ')
+            self.numero = input('Escreva o numero do seu contato: ')
+            with open('data.txt', 'a') as arquivo:
+                arquivo.writelines(f'Contato: {self.contato} , Numero: {self.numero}')
+                arquivo.write('\n')
     def Ler(self): 
         with open('data.txt', 'r') as arquivo: 
             lista = arquivo.read() 
@@ -262,41 +264,34 @@ class Segurança:
         return self.admin_acesso
     def AcessoAdm(self):
         if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha.lower() != 'sair':
-                    with open('AdmUser.txt', 'r') as log:
-                        for linha in log:
-                            if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
-                                while True:
-                                    definir = input('Você deseja pesquisar um usuario em especifico ou todos [UNICO/TODOS] digite " " para parar? ').upper().strip()
-                                    while True:
-                                        if definir == 'UNICO':
-                                            user = input('Qual usuario você deseja deixa como ADMIN? ').strip()
-                                            with open('AdmUser.txt', 'r') as leitura:
-                                                texto = leitura.readlines()
-                                            with open('AdmUser.txt', 'w') as escreve:
-                                                for linha in texto:
-                                                    fatiado = linha.split()
-                                                    if f'Usuario: {user}' in linha and f'Acesso: User' in linha:
-                                                        escreve.write(f'Usuario: {user} | Senha: {fatiado[4]} | Acesso: ADMIN \n')
-                                                        print(f'Usuario: {user} agora é ADMIN!')
-                                                    else:
-                                                        escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
-                                                break
-                                        elif definir == 'TODOS':
-                                            with open('AdmUser.txt', 'r') as leitura:
-                                                texto = leitura.readlines()
-                                            for linha in texto:
-                                                print(f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}")
-                                            break
-                                        elif definir == '':
-                                            return
-                            else:
-                                print('Usuario ou senha esta incorreta!')
-                else:
-                    break
+            verifica = self.VerificaAdmin
+            if verifica:
+                while True:
+                    definir = input('Você deseja pesquisar um usuario em especifico ou todos [UNICO/TODOS] digite " " para parar? ').upper().strip()
+                    while True:
+                        if definir == 'UNICO':
+                            user = input('Qual usuario você deseja deixa como ADMIN? ').strip()
+                            with open('AdmUser.txt', 'r') as leitura:
+                                texto = leitura.readlines()
+                            with open('AdmUser.txt', 'w') as escreve:
+                                for linha in texto:
+                                    fatiado = linha.split()
+                                    if f'Usuario: {user}' in linha and f'Acesso: User' in linha:
+                                        escreve.write(f'Usuario: {user} | Senha: {fatiado[4]} | Acesso: ADMIN \n')
+                                        print(f'Usuario: {user} agora é ADMIN!')
+                                    else:
+                                        escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
+                                break
+                        elif definir == 'TODOS':
+                            with open('AdmUser.txt', 'r') as leitura:
+                                texto = leitura.readlines()
+                            for linha in texto:
+                                print(f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}")
+                            break
+                        elif definir == '':
+                            return
+            else:
+                print('Usuario ou senha esta incorreta!')
     def TrocaNome(self):
         if self.admin_acesso:
             while True:
