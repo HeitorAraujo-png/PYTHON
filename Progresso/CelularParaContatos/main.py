@@ -1,22 +1,18 @@
 from back import Contatos, Menu, Segurança
 from time import sleep
 login = Segurança()
-adm = login.Adm()
-Verdade = True
-acesso, senha, user = login.Verifica()
-if acesso == False:
-    Verdade = False
-if Verdade:
+acesso, senha, user, admin = login.Verifica()
+if acesso:
     print('Primeiramente vamos adicionar um numero.')
     fone = Contatos(acesso=acesso, senha=senha, user=user)
-    while Verdade:
-        Menu(adm=adm)
+    while acesso:
+        Menu(adm=admin)
         x = int(input('Digite um numero: '))
         if x == 1:
-            fone = Contatos()
+            fone = Contatos(acesso=acesso, senha=senha, user=user)
         elif x == 2:
             print('\n' * 10)
-            fone.ler()
+            fone.Ler()
             sleep(2)
         elif x == 3:
             print('\n' * 10)
@@ -24,7 +20,7 @@ if Verdade:
             sleep(2)
         elif x == 4:
             print('\n' * 10)
-            fone.Kamikaze(adm=adm)
+            fone.Kamikaze(adm=admin)
             sleep(2)
         elif x == 5:
             print('\n' * 10)
@@ -43,7 +39,7 @@ if Verdade:
             print('Finalizando o programa...')
             sleep(2)
             break
-        if login.Adm():
+        if admin:
             if x == 123321:
                 login.AcessoAdm()
                 sleep(1)
@@ -74,7 +70,7 @@ if Verdade:
             elif x == 99:
                 login.TabelaAdmin()
                 sleep(1)
-            elif x == 'SECRET':
+            elif x == 321123:
                 login.TabelaSecreta()
                 sleep(1)
             else:
