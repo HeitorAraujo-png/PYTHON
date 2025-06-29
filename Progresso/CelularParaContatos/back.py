@@ -37,20 +37,14 @@ class Contatos:
                     return
             while continua: 
                 certeza = input('Você tem certeza que deseja apagar todos os contatos da sua lista de contatos? [SIM/NãO] ').upper().strip()
-                if certeza in ['NÃO', 'NAO']:
-                    continua = False
-                elif certeza == 'SIM':
+                if certeza == 'SIM':
                     while continua:
                         certeza = input('Você tem a certeza ABSOLUTA que deseja apagar todos os seus contatos para SEMPRE??? [SIM/NãO] ').upper().strip()
-                        if certeza in ['NÃO', 'NAO']:
-                            continua = False
-                        elif certeza == 'SIM':            
+                        if certeza == 'SIM':            
                             if self.bkp != True:
                                 while continua:
                                     certeza = input('Você ainda não tem o backup feito! Você não é ADMIN então não pode apagar a lista sem um backup! Você deseja fazer o backup? [SIM/NÃO]' ).upper().strip()
-                                    if certeza in ['NÃO', 'NAO']:
-                                        continua = False
-                                    elif certeza == 'SIM': 
+                                    if certeza == 'SIM': 
                                         with open('data.txt', 'r') as arquivo:
                                             linhas = arquivo.readlines()
                                         with open('dataBKP.txt', 'w') as backup:
@@ -62,10 +56,22 @@ class Contatos:
                                             arquivo.write('') 
                                         continua = False
                                         print('Contatos apagados')
+                                    elif certeza in ['NÃO', 'NAO']:
+                                        continua = False
+                                    else:
+                                        print('Seleção invalida! Tente novamente.')
                             else:
                                 with open('data.txt', 'w') as arquivo:
                                     arquivo.write('') 
                                 continua = False
+                        elif certeza in ['NÃO', 'NAO']:
+                            continua = False
+                        else:
+                            print('Seleção invalida! Tente novamente.')
+                elif certeza in ['NÃO', 'NAO']:
+                    continua = False
+                else:
+                    print('Seleção invalida! Tente novamente.')
         else:
             if self.bkp != True:
                 while continua:
