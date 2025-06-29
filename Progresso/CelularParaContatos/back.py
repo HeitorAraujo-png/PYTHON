@@ -10,11 +10,11 @@ class Contatos:
             self.contato = input('Escreva o nome do seu contato: ')
             self.numero = input('Escreva o numero do seu contato: ')
             with open('data.txt', 'a') as arquivo:
-                arquivo.writelines(f'Contato: {self.contato} , Numero: {self.numero}')
+                arquivo.write(f'Contato: {self.contato} , Numero: {self.numero}')
                 arquivo.write('\n')
     def Ler(self): 
         with open('data.txt', 'r') as arquivo: 
-            lista = arquivo.read() 
+            lista = arquivo.read()
             print(lista)
     def Kamikaze(self, adm):
         continua = True
@@ -26,14 +26,12 @@ class Contatos:
                 tentativas = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
                 if tentativas.lower() == 'sair':
                     return
-                if user != '':
+                else:
                     if tentativas == self.senha and user == self.user:
                         self.user_acesso = True
                     else:
                         print('Ou usuario ou senha esta incorreta')
                         self.user_acesso = False
-                else:
-                    print('Ou usuario ou senha esta incorreta')
             while continua: 
                 certeza = input('Você tem certeza que deseja apagar todos os contatos da sua lista de contatos? [SIM/NãO] ').upper().strip()
                 if certeza == 'SIM':
@@ -390,7 +388,7 @@ class Segurança:
                     while True:
                         Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
                         achou = False
-                        if Cria.lower() == 'Sair':
+                        if Cria.lower() == 'sair':
                             return
                         with open('AdmUser.txt', 'r') as log:
                             texto = log.readlines()
@@ -419,7 +417,7 @@ class Segurança:
                     while True:
                         Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
                         achou = False
-                        if Cria.lower() == 'Sair':
+                        if Cria.lower() == 'sair':
                             return
                         with open('AdmUser.txt', 'r') as log:
                             texto = log.readlines()
@@ -529,4 +527,3 @@ class Menu:
             6. BACKUP
             7. VER BACKUP
             8. Sair\n''')
-            
