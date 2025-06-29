@@ -40,38 +40,41 @@ if acesso:
             sleep(2)
             break
         if admin:
-            if x == 123321:
+            if x == 9:
                 login.AcessoAdm()
                 sleep(1)
-            elif x == 11:
+            elif x == 10:
                 login.TrocaSenha()
                 sleep(1) 
-            elif x == 22:
+            elif x == 11:
                 login.TrocaNome()
                 sleep(1)
-            elif x == 33:
+            elif x == 12:
                 login.DeletaUser()
                 sleep(1)
-            elif x == 44:
+            elif x == 13:
                 login.DeletaAdm()
                 sleep(1)                
-            elif x == 55:
+            elif x == 14:
                 login.CriaVariosUser()
                 sleep(1)   
-            elif x == 66:
+            elif x == 15:
                 login.CriaVariosAdmin()
                 sleep(1)
-            elif x == 77:
+            elif x == 16:
                 login.TabelaUserAdmin()
                 sleep(1)
-            elif x == 88:
+            elif x == 17:
                 login.TabelaUser()
                 sleep(1)
-            elif x == 99:
+            elif x == 18:
                 login.TabelaAdmin()
                 sleep(1)
-            elif x == 321123:
+            elif x == 19:
                 login.TabelaSecreta()
+                sleep(1)
+            elif x == 20:
+                login.DeletarLinha()
                 sleep(1)
             else:
                 print('\n' * 10)
