@@ -504,6 +504,7 @@ class Menu:
     16. Tabela De User e Admin
     17. Tabela de User
     18. Tabela de Admin''')
+                    break
                 elif escolha == 'USER':
                     print(f'''{'USER':^25}
     Escolha uma opção:
@@ -515,6 +516,7 @@ class Menu:
     6. BACKUP
     7. VER BACKUP
     8. Sair\n''')
+                    break
                 else:
                     print('Escolha invalida')
         else:
@@ -528,3 +530,4 @@ class Menu:
             6. BACKUP
             7. VER BACKUP
             8. Sair\n''')
+            
