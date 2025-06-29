@@ -2,7 +2,6 @@ from re import search
 # O codigo vai ser documentado ainda! Aguarde ate as proximas atualizações...
 class Contatos:      
     def __init__(self, acesso, senha, user):
-        acesso, senha, user = Segurança.Verifica()
         if acesso:
             self.bkp = False
             self.user_acesso = acesso
@@ -192,14 +191,16 @@ class Segurança:
                         else:
                             break
                     while True:
-                        verifica = self.VerificaSenha()
-                        if verifica == True:
+                        verifica, senha = self.VerificaSenha()
+                        if not verifica:
+                            self.senha = senha
                             with open('AdmUser.txt', 'a') as cadastrar:
                                 cadastrar.writelines(f'Usuario: {self.user} | Senha: {self.senha} | Acesso: {self.Acesso} \n')
                             self.user_acesso = True
-                            return
+                            self.admin_acesso = False
+                            break
                         else:
-                            print(', '.join(verifica),'.')
+                            print(print(', '.join(verifica),'.'))
             elif definir == 'LOGIN':
                 while True:
                     with open('AdmUser.txt', 'r') as arquivo:
@@ -220,7 +221,7 @@ class Segurança:
                             print('Usuario ou senha incorreta!')
                     else:
                         print('saindo...')
-                        self.user_acesso = self.senha = self.user = False
+                        self.user_acesso = self.senha = self.user = self.admin_acesso = False
                         return
             else:
                 print('Tente novamente!')
@@ -241,7 +242,6 @@ class Segurança:
         if not erro:
             return erro, senha
         else:
-            print(', '.join(erro),'.')
             return erro, senha
     def VerificaAdmin(self):
         while True:
@@ -257,41 +257,26 @@ class Segurança:
             print('Usuario ou senha invalida')
     def Verifica(self):
         if self.user_acesso:
-            return self.user_acesso, self.senha, self.user
+            return self.user_acesso, self.senha, self.user, self.admin_acesso
         else:
-            return False, self.senha, self.user     
-    def Adm(self):
-        return self.admin_acesso
+            return self.user_acesso, self.senha, self.user, self.admin_acesso
     def AcessoAdm(self):
         if self.admin_acesso:
-            verifica = self.VerificaAdmin
+            verifica = self.VerificaAdmin()
             if verifica:
                 while True:
-                    definir = input('Você deseja pesquisar um usuario em especifico ou todos [UNICO/TODOS] digite " " para parar? ').upper().strip()
-                    while True:
-                        if definir == 'UNICO':
-                            user = input('Qual usuario você deseja deixa como ADMIN? ').strip()
-                            with open('AdmUser.txt', 'r') as leitura:
-                                texto = leitura.readlines()
-                            with open('AdmUser.txt', 'w') as escreve:
-                                for linha in texto:
-                                    fatiado = linha.split()
-                                    if f'Usuario: {user}' in linha and f'Acesso: User' in linha:
-                                        escreve.write(f'Usuario: {user} | Senha: {fatiado[4]} | Acesso: ADMIN \n')
-                                        print(f'Usuario: {user} agora é ADMIN!')
-                                    else:
-                                        escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
-                                break
-                        elif definir == 'TODOS':
-                            with open('AdmUser.txt', 'r') as leitura:
-                                texto = leitura.readlines()
+                    user = input('Qual usuario você deseja deixa como ADMIN? [Digite "Sair" para parar] ').strip()
+                    if user.lower() != 'sair':
+                        with open('AdmUser.txt', 'r') as leitura:
+                            texto = leitura.readlines()
+                        with open('AdmUser.txt', 'w') as escreve:
                             for linha in texto:
-                                print(f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}")
+                                if f'Usuario: {user}' in linha:
+                                    escreve.write(f'Usuario: {user} | Senha: {linha[(linha.find('Senha: ')):(linha.find('| Acesso: '))]} | Acesso: ADMIN \n')
+                                    print(f'Usuario: {user} agora é ADMIN!')
+                                else:
+                                    escreve.write(linha)
                             break
-                        elif definir == '':
-                            return
-            else:
-                print('Usuario ou senha esta incorreta!')
     def TrocaNome(self):
         if self.admin_acesso:
             while True:
@@ -310,120 +295,94 @@ class Segurança:
                                         texto = leitura.readlines()
                                     with open('AdmUser.txt', 'w') as escreve:
                                         for linha in texto:
-                                            fatiado = linha.split()
                                             if f'Usuario: {pesquisa}' in linha:
-                                                escreve.write(f'Usuario: {troca} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
+                                                escreve.write(f'Usuario: {troca}{linha[(linha.find(' | Senha: ')):]}')
                                                 print(f'Nome trocado!')
                                             else:
-                                                escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
+                                                escreve.write(linha)
                                         return
                 else:
                     break    
     def TrocaSenha(self):
         if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha.lower() != 'sair':
+            verifica = self.VerificaAdmin()
+            if verifica:
+                while True:
+                    User = Password = False
+                    user = input('Qual o nome do usuario que você deseja trocar de senha? ').strip()
+                    password = input('Qual é a senha dele atual? ')
+                    if user == '' or password == '':
+                        return
+                    with open('AdmUser.txt', 'r') as log2:
+                        for linha2 in log2:
+                            if f'Usuario: {user}' in linha2:
+                                User = True
+                            if f'Senha: {password}' in linha2:
+                                Password = True
+                        if Password == False or User == False:
+                            print('Usuario ou senha invalido! Tente novamente.')
+                    while User and Password:
+                        verificar, senha = self.VerificaSenha()
+                        if not verificar:
+                            break
+                        else:
+                            print(', '.join(verificar),'.')
                     with open('AdmUser.txt', 'r') as log:
-                        for linha in log:
-                            if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
-                                while True:
-                                    User = Password = False
-                                    user = input('Qual o nome do usuario que você deseja trocar de senha? ').strip()
-                                    password = input('Qual é a senha dele atual? ').strip()
-                                    if user == '' or password == '':
-                                        return
-                                    with open('AdmUser.txt', 'r') as log2:
-                                        for linha2 in log2:
-                                            if f'Usuario: {user}' in linha2:
-                                                User = True
-                                            if f'Senha: {password}' in linha2:
-                                                Password = True
-                                            if Password == False or User == False:
-                                                print('Usuario ou senha invalido! Tente novamente.')
-                                    while User and Password:
-                                        verificar, senha = self.VerificaSenha()
-                                        if not verificar:
-                                            break
-                                        else:
-                                            print(', '.join(verificar),'.')
-                                    with open('AdmUser.txt', 'r') as log:
-                                        texto = log.readlines()
-                                    with open('AdmUser.txt', 'w') as escreve:
-                                        for linha in texto:
-                                            fatiado = linha.split()
-                                            if f'Usuario: {user}' in linha and f'Senha: {password}' in linha:
-                                                escreve.write(f'Usuario: {user} | Senha: {senha} | Acesso: {fatiado[7]} \n')
-                                                print(f'Senha trocada!')
-                                            else:
-                                                escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
-                                        return
-                else:
-                    return                     
+                        texto = log.readlines()
+                    with open('AdmUser.txt', 'w') as escreve:
+                        for linha in texto:
+                            if f'Usuario: {user}' in linha and f'Senha: {password}' in linha:
+                                escreve.write(f'Usuario: {user} | Senha: {senha} | Acesso: {linha[(linha.find('Acesso: ')):]} \n')
+                                print(f'Senha trocada!')
+                            else:
+                                escreve.write(linha)
+                        return     
     def DeletaUser(self):
         if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha.lower() != 'sair':
-                    with open('AdmUser.txt', 'r') as log:
-                        for login in log:
-                            if f'Usuario: {usuario}' in login and f'Senha: {senha}' in login and f'Acesso: ADMIN' in login:
-                                while True:
-                                    pesquisa = input('Qual o usuario que você deseja deletar? ').strip()
-                                    with open('AdmUser.txt', 'r') as log:
-                                        texto = log.readlines()
-                                    with open('AdmUser.txt', 'w') as escreve:
-                                        for linha in texto:
-                                            fatiado = linha.split()
-                                            if f'Usuario: {pesquisa}' in linha and f'Acesso: User' in linha:
-                                                escreve.write('')
-                                                print(f'Usuario deletado!')
-                                            else:
-                                                escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
-                                        return
-                else:
-                    break     
+            condicao = self.VerificaAdmin()
+            if condicao:
+                pesquisa = input('Qual o usuario que você deseja deletar? ').strip()
+                with open('AdmUser.txt', 'r') as log:
+                    texto = log.readlines()
+                with open('AdmUser.txt', 'w') as escreve:
+                    for linha in texto:
+                        if f'Usuario: {pesquisa}' in linha and not f'Acesso: ADMIN' in linha:
+                            escreve.write('')
+                            print(f'Usuario deletado!')
+                        else:
+                            escreve.write(linha)
+                    return
     def DeletaAdm(self):
-        if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha.lower() != 'sair':
-                    with open('AdmUser.txt', 'r') as log:
-                        for linha in log:
-                            if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
-                                while True:
-                                    pesquisa = input('Qual o ADMIN que você deseja deletar? ').strip()
-                                    pesquisa_senha_admin = input('Qual a senha desse ADMIN?').strip()
-                                    while True:
-                                        ok = input('Você esta prestes a apagar um ADMIN, você tem CERTEZA disso[SIM/NAO]?').upper().strip()
-                                        if ok == 'SIM':
-                                            break
-                                        else:
-                                            return
-                                    with open('AdmUser.txt', 'r') as log:
-                                        texto = log.readlines()
-                                    with open('AdmUser.txt', 'w') as escreve:
-                                        for linha in texto:
-                                            fatiado = linha.split()
-                                            if f'Usuario: {pesquisa}' in linha and f'Senha: {pesquisa_senha_admin}' in linha and f'Acesso: ADMIN' in linha:
-                                                escreve.write('')
-                                                print(f'Usuario deletado!')
-                                            else:
-                                                escreve.write(f'Usuario: {fatiado[1]} | Senha: {fatiado[4]} | Acesso: {fatiado[7]} \n')
-                                        return
-                else:
-                    break    
-    def CriaVariosUser(self):
         if self.admin_acesso:
             condicao = self.VerificaAdmin()
             while condicao:
+                pesquisa = input('Qual o ADMIN que você deseja deletar? ').strip()
+                pesquisa_senha_admin = input('Qual a senha desse ADMIN?').strip()
+                while True:
+                    ok = input('Você esta prestes a apagar um ADMIN, você tem CERTEZA disso[SIM/NAO]?').upper().strip()
+                    if ok == 'SIM':
+                        break
+                    else:
+                        return
+                with open('AdmUser.txt', 'r') as log:
+                    texto = log.readlines()
+                with open('AdmUser.txt', 'w') as escreve:
+                    for linha in texto:
+                        fatiado = linha.split()
+                        if f'Usuario: {pesquisa}' in linha and f'Senha: {pesquisa_senha_admin}' in linha and f'Acesso: ADMIN' in linha:
+                            escreve.write('')
+                            print(f'ADMIN deletado!')
+                        else:
+                            escreve.write(linha)
+                    return   
+    def CriaVariosUser(self):
+        if self.admin_acesso:
+            condicao = self.VerificaAdmin()
+            if condicao:
                 while True:
                     Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
                     achou = False
-                    if Cria != 'Sair':
+                    if Cria.lower() == 'Sair':
                         return
                     with open('AdmUser.txt', 'r') as log:
                         texto = log.readlines()
@@ -443,33 +402,35 @@ class Segurança:
                 with open('AdmUser.txt', 'a') as escreve:
                     escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: User \n')
                     self.user_acesso = True
+                    return
     def CriaVariosAdmin(self):
         if self.admin_acesso:
             condicao = self.VerificaAdmin()
-            while condicao:
-                Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
-                achou = False
-                if Cria != 'Sair':
-                    return
-                with open('AdmUser.txt', 'r') as log:
-                    texto = log.readlines()
-                for linha in texto:
-                    if f'Usuario: {Cria}' in linha:
-                        achou = True
-                if achou:
-                    print(f'Nome de usuario "{Cria}" já cadastrado. Tente outro...')
-                else:
-                    break
-            while True:
-                verifica, senha = self.VerificaSenha()
-                if not verifica:
-                    break
-                else:
-                    print(', '.join(verifica),'.')
-            with open('AdmUser.txt', 'a') as escreve:
-                escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: ADMIN \n')
-                self.user_acesso = True
-                self.admin_acesso = True        
+            if condicao:
+                while True:
+                    Cria = input('Qual o nome do usuario que você deseja criar? [Escreva "Sair" para cancelar] ').strip()
+                    achou = False
+                    if Cria.lower() == 'Sair':
+                        return
+                    with open('AdmUser.txt', 'r') as log:
+                        texto = log.readlines()
+                    for linha in texto:
+                        if f'Usuario: {Cria}' in linha:
+                            achou = True
+                    if achou:
+                        print(f'Nome de usuario "{Cria}" já cadastrado. Tente outro...')
+                    else:
+                        break
+                while True:
+                    verifica, senha = self.VerificaSenha()
+                    if not verifica:
+                        break
+                    else:
+                        print(', '.join(verifica),'.')
+                with open('AdmUser.txt', 'a') as escreve:
+                    escreve.writelines(f'Usuario: {Cria} | Senha: {senha} | Acesso: ADMIN \n')
+                    self.user_acesso = True
+                    self.admin_acesso = True        
     def TabelaUserAdmin(self):
          with open('AdmUser.txt', 'r') as log:
             for linha in log:
@@ -493,9 +454,10 @@ class Segurança:
 class Menu:
     def __init__(self, adm):
         if adm:
-            escolha = input('Deseja ver os comandos de ADMIN ou do USER [ADMIN/USER]? ').strip().upper()
-            if escolha == 'ADMIN':
-                print(f'''
+            while True:
+                escolha = input('Deseja ver os comandos de ADMIN ou do USER [ADMIN/USER]? ').strip().upper()
+                if escolha == 'ADMIN':
+                    print(f'''
     {'ADM':^25}
     Escolha uma opção:
     123321. Acesso ADM 
@@ -508,8 +470,9 @@ class Menu:
     77. Tabela De User e Admin
     88. Tabela de User
     99. Tabela de Admin''')
-            elif escolha == 'USER':
-                print(f'''{'USER':^25}
+                    break
+                elif escolha == 'USER':
+                    print(f'''{'USER':^25}
     Escolha uma opção:
     1. Adicionar aos contato
     2. Ler Contatos
@@ -519,14 +482,17 @@ class Menu:
     6. BACKUP
     7. VER BACKUP
     8. Sair\n''')
+                    break
+                else:
+                    print('Escolha invalida')
         else:
             print(f'''{'USER'^25}
-    Escolha uma opção:
-    1. Adicionar aos contato
-    2. Ler Contatos
-    3. Pesquisar Contato
-    4. Apagar Todos os Contatos (Kamikaze)
-    5. Apagar contato
-    6. BACKUP
-    7. VER BACKUP
-    8. Sair\n''')
+            Escolha uma opção:
+            1. Adicionar aos contato
+            2. Ler Contatos
+            3. Pesquisar Contato
+            4. Apagar Todos os Contatos (Kamikaze)
+            5. Apagar contato
+            6. BACKUP
+            7. VER BACKUP
+            8. Sair\n''')
