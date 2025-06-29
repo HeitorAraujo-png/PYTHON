@@ -20,7 +20,7 @@ class Contatos:
         continua = True
         self.user_acesso = False
         self.admin_acesso = adm
-        if self.admin_acesso == False:
+        if not self.admin_acesso:
             while self.user_acesso != True:
                 user = input('Digite seu usuario: ').strip()
                 tentativas = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
@@ -33,8 +33,7 @@ class Contatos:
                         print('Ou usuario ou senha esta incorreta')
                         self.user_acesso = False
                 else:
-                    print('saindo...')
-                    return
+                    print('Ou usuario ou senha esta incorreta')
             while continua: 
                 certeza = input('Você tem certeza que deseja apagar todos os contatos da sua lista de contatos? [SIM/NãO] ').upper().strip()
                 if certeza == 'SIM':
@@ -102,10 +101,10 @@ class Contatos:
                                             arquivo.write('') 
                                         continua = False
                                         print('Contatos apagados')
-                        else:
-                            with open('data.txt', 'w') as arquivo:
-                                arquivo.write('') 
-                            continua = False               
+            else:
+                with open('data.txt', 'w') as arquivo:
+                    arquivo.write('') 
+                continua = False               
     def Pesquisa(self): 
         cade = input('Qual contato ou numero você deseja achar? ').strip()
         with open('data.txt', 'r') as arquivo:
