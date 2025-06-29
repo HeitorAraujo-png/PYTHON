@@ -1,0 +1,11 @@
+Usuario: Heitor | Senha: Abcd1234 | Acesso: ADMIN 
+Usuario: Joao Mario | Senha: Joao2024 | Acesso: User
+Usuario: maria | Senha: Maria2123 | Acesso: User
+Usuario: pedro | Senha: Pedro4456 | Acesso: User
+Usuario: lucas | Senha: Lucas1321 | Acesso: User
+Usuario: bruno | Senha: Bruno4890 | Acesso: ADMIN
+Usuario: carla | Senha: Carla2025 | Acesso: User
+Usuario: felipe | Senha: Felipe2777 | Acesso: User
+Usuario: sofia | Senha: Sofia4123 | Acesso: User
+Usuario: Neto | Senha: Netao2025 | Acesso: ADMIN
+Usuario: Fernanda | Senha: Fern2024 | Acesso: User
