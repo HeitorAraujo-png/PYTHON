@@ -24,6 +24,8 @@ class Contatos:
             while self.user_acesso != True:
                 user = input('Digite seu usuario: ').strip()
                 tentativas = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
+                if tentativas.lower() == 'sair':
+                    return
                 if user != '':
                     if tentativas == self.senha and user == self.user:
                         self.user_acesso = True
