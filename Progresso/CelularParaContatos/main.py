@@ -7,7 +7,10 @@ if acesso:
     fone = Contatos(acesso=acesso, senha=senha, user=user)
     while acesso:
         Menu(adm=admin)
-        x = int(input('Digite um numero: '))
+        try:
+            x = int(input('Digite um numero: '))
+        except ValueError:
+            x = int(input('Seleção invalida! Tente novamente.\nDigite um NUMERO: '))
         if x == 1:
             fone = Contatos(acesso=acesso, senha=senha, user=user)
         elif x == 2:
