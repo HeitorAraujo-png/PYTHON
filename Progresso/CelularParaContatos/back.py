@@ -42,12 +42,7 @@ class Contatos:
                                 while continua:
                                     certeza = input('Você ainda não tem o backup feito! Você não é ADMIN então não pode apagar a lista sem um backup! Você deseja fazer o backup? [SIM/NÃO]' ).upper().strip()
                                     if certeza == 'SIM': 
-                                        with open('data.txt', 'r') as arquivo:
-                                            linhas = arquivo.readlines()
-                                        with open('dataBKP.txt', 'w') as backup:
-                                            for linha in linhas:
-                                                backup.write(linha)
-                                        self.bkp = True
+                                        self.Backup()
                                         print('backup concluido')       
                                         with open('data.txt', 'w') as arquivo:
                                             arquivo.write('') 
@@ -73,14 +68,10 @@ class Contatos:
             if self.bkp != True:
                 while continua:
                     certeza = input('Você deseja apagar todos os contatos da sua lista de contatos? [SIM/NãO] ').upper().strip()
-                    if certeza in ['NÃO', 'NAO']:
-                        continua = False
-                    elif certeza == 'SIM':
+                    if certeza == 'SIM':
                         while continua:
                             certeza = input('Você ainda não tem o backup feito! Mesmo assim você deseja apagar sua lista de contatos? [SIM/NÃO]' ).upper().strip()
-                            if certeza in ['NÃO', 'NAO']:
-                                continua = False
-                            elif certeza == 'SIM': 
+                            if certeza == 'SIM': 
                                 while continua:
                                     bkp = input('Deseja fazer o backup? [SIM/NÃO]').upper().strip()
                                     if bkp in ['NÃO', 'NAO']:
@@ -88,17 +79,17 @@ class Contatos:
                                             arquivo.write('') 
                                         continua = False
                                     elif bkp == 'SIM':
-                                        with open('data.txt', 'r') as arquivo:
-                                            linhas = arquivo.readlines()
-                                        with open('dataBKP.txt', 'w') as backup:
-                                            for linha in linhas:
-                                                backup.write(linha)
+                                        self.Backup
                                         self.bkp = True
                                         print('backup concluido')       
                                         with open('data.txt', 'w') as arquivo:
                                             arquivo.write('') 
                                         continua = False
                                         print('Contatos apagados')
+                            elif certeza in ['NÃO', 'NAO']:
+                                continua = False
+                    elif certeza in ['NÃO', 'NAO']:
+                        continua = False
             else:
                 with open('data.txt', 'w') as arquivo:
                     arquivo.write('') 
@@ -205,14 +196,14 @@ class Segurança:
                             self.admin_acesso = False
                             break
                         else:
-                            print(print(', '.join(verifica),'.'))
+                            print(', '.join(verifica),'.')
             elif definir == 'LOGIN':
                 while True:
                     with open('AdmUser.txt', 'r') as arquivo:
                         texto = arquivo.readlines()
                     user = input('Digite seu usuario: ').strip()
                     tentativas = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                    if tentativas != 'Sair':
+                    if tentativas.lower() != 'sair':
                         for linha in texto:
                             if f'Usuario: {user}' in linha and f'Senha: {tentativas}' in linha and tentativas != '':
                                 self.user_acesso = True
@@ -282,32 +273,27 @@ class Segurança:
                                 else:
                                     escreve.write(linha)
                             break
+                    elif user.lower() == 'sair':
+                        break
     def TrocaNome(self):
         if self.admin_acesso:
-            while True:
-                usuario = input('Digite seu usuario (ADMIM): ').strip()
-                senha = input('Digite a sua senha: [Escreva "Sair" para cancelar]: ').strip()
-                if senha.lower() != 'sair':
-                    with open('AdmUser.txt', 'r') as log:
-                        for linha in log:
-                            if f'Usuario: {usuario}' in linha and f'Senha: {senha}' in linha and f'Acesso: ADMIN' in linha:
-                                while True:
-                                    pesquisa = input('Qual o nome do usuario que você deseja trocar de nome? ').strip()
-                                    troca = input('Qual vai ser o novo nome? ').strip()
-                                    if pesquisa == '':
-                                        return
-                                    with open('AdmUser.txt', 'r') as leitura:
-                                        texto = leitura.readlines()
-                                    with open('AdmUser.txt', 'w') as escreve:
-                                        for linha in texto:
-                                            if f'Usuario: {pesquisa}' in linha:
-                                                escreve.write(f'Usuario: {troca}{linha[(linha.find(' | Senha: ')):]}')
-                                                print(f'Nome trocado!')
-                                            else:
-                                                escreve.write(linha)
-                                        return
-                else:
-                    break    
+            verifica = self.VerificaAdmin()
+            if verifica:
+                while True:
+                    pesquisa = input('Qual o nome do usuario que você deseja trocar de nome? ').strip()
+                    troca = input('Qual vai ser o novo nome? ').strip()
+                    if pesquisa == '' or troca == '':
+                        return
+                    with open('AdmUser.txt', 'r') as leitura:
+                        texto = leitura.readlines()
+                    with open('AdmUser.txt', 'w') as escreve:
+                        for linha in texto:
+                            if f'Usuario: {pesquisa}' in linha:
+                                escreve.write(f'Usuario: {troca}{linha[(linha.find(' | Senha: ')):]}')
+                                print(f'Nome trocado!')
+                            else:
+                                escreve.write(linha)
+                        return  
     def TrocaSenha(self):
         if self.admin_acesso:
             verifica = self.VerificaAdmin()
@@ -373,7 +359,6 @@ class Segurança:
                     texto = log.readlines()
                 with open('AdmUser.txt', 'w') as escreve:
                     for linha in texto:
-                        fatiado = linha.split()
                         if f'Usuario: {pesquisa}' in linha and f'Senha: {pesquisa_senha_admin}' in linha and f'Acesso: ADMIN' in linha:
                             escreve.write('')
                             print(f'ADMIN deletado!')
