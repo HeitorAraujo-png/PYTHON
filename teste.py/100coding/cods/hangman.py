@@ -44,7 +44,7 @@ corpo = [
              |
              | ''')
 ]
-lista_palavras = ['camelo', 'paralelo', 'celular', 'thays']
+lista_palavras = ['camelo', 'paralelo', 'celular', 'nomes']
 palavra_escolhida = lista_palavras[cw]
 tamanho = len(palavra_escolhida)
 segredo = ''
