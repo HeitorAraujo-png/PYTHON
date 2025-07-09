@@ -62,7 +62,6 @@ class Snake:
     def LocalFruta(self):
         xFruta = choice(range(-280, 281, 20))
         yFruta = choice(range(-280, 281, 20))
-        print(xFruta, yFruta)
         self.fruta.teleport(xFruta, yFruta)
             
     def Comeu(self):
