@@ -7,6 +7,7 @@ while True:
         with open('Pontucao.txt', 'r') as placar:
             print(placar.read())
     elif resposta.lower() == 'jogar':
+        sleep(5)
         On = True
         while On:
             snake = Snake()
