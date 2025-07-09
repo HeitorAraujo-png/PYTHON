@@ -1,5 +1,6 @@
 from turtle import Turtle
 from random import choice
+
 class Snake:
     
     def __init__(self):
