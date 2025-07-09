@@ -4,9 +4,10 @@ from random import choice
 class Snake:
     
     def __init__(self):
+        self.pontos = 0
+        self.Maca()
         self.segm = []
         self.Cobra()
-        self.Maca()
 
     def Cobra(self):
         self.comeca = [(0,0), (-20, 0), (-40, 0),]
@@ -18,12 +19,12 @@ class Snake:
             self.segm.append(nvlinha)
     
     def Move(self):
-        self.Comer()
         for segnum in range(len(self.segm) - 1, 0, -1):
             nx = self.segm[segnum -1].xcor()
             ny = self.segm[segnum -1].ycor()
             self.segm[segnum].goto(nx, ny)
         self.segm[0].forward(20)
+        self.Comer()
 
     def Direita(self):
         if self.segm[0].heading() != 180:
@@ -68,12 +69,20 @@ class Snake:
         self.xcord = ((self.segm[-1].xcor()) - 20)
         self.ycord = (self.segm[-1].ycor())
         linha = Turtle('square')
+        self.LocalFruta()
         linha.color('white')
         linha.penup()
         linha.goto(self.xcord, self.ycord)
         self.segm.append(linha)
+        self.pontos += 1
         
     def Comer(self):
-        if (self.fruta.xcor()) == round(self.segm[0].xcor()) and (self.fruta.ycor()) == round(self.segm[0].ycor()) :
-            self.LocalFruta()
+        if round(self.fruta.xcor()) == round(self.segm[0].xcor()) and round(self.fruta.ycor()) == round(self.segm[0].ycor()):
             self.Comeu()
+    
+    def Pontuacao(self):
+        with open('Pontucao.txt', 'a') as pp: #Player Points
+            continua = input(f'Sua pontuação foi de {self.pontos}! Deseja guardar sua pontuação? [SIM/NÃO] ').strip()
+            if continua.lower() == 'sim':
+                nome = input('Qual o seu nome? ').strip()
+                pp.write(f'Nome: {nome} | Pontos: {self.pontos}\n')
