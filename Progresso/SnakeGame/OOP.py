@@ -51,10 +51,7 @@ class Snake:
         print(cord)
         if xycord in cord:
             return True
-        
         return False
-            
-        
         
     def Maca(self):
         self.fruta = Turtle()

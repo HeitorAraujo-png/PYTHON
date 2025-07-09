@@ -4,13 +4,11 @@ from turtle import Screen
 On = True
 while On:
     snake = Snake()
-
     tela = Screen()
     tela.setup(width=600, height=600)
     tela.bgcolor('black')
     tela.title('Snake Game')
     tela.tracer(0)
-            
     tela.onkey(snake.Direita, 'Right')
     tela.onkey(snake.Cima, 'Up')
     tela.onkey(snake.Esquerda, 'Left')
