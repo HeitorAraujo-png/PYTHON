@@ -48,8 +48,6 @@ class Snake:
         for i in range((len(self.segm) -1), 1, -1):
             cord.append(f'{round(self.segm[i].xcor())}, {round(self.segm[i].ycor())}')
         xycord = f'{round(self.segm[0].xcor())}, {round(self.segm[0].ycor())}'
-        print(xycord)
-        print(cord)
         if xycord in cord:
             return True
         return False
