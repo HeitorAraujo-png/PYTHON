@@ -66,7 +66,7 @@ class Snake:
         self.fruta.teleport(xFruta, yFruta)
             
     def Comeu(self):
-        self.xcord = ((self.segm[-1].xcor()) - 20)
+        self.xcord = (self.segm[-1].xcor())
         self.ycord = (self.segm[-1].ycor())
         linha = Turtle('square')
         self.LocalFruta()
