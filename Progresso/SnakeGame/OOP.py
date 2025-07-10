@@ -3,18 +3,21 @@ from random import choice
 
 class Snake:
     
-    def __init__(self):
+    def __init__(self, cor, forma):
         self.pontos = 0
+        self.CorCobra = cor
+        self.FormaCobra = forma
         self.Maca()
+        self.LocalFruta()
         self.segm = []
         self.Cobra()
 
     def Cobra(self):
         self.comeca = [(0,0), (-20, 0), (-40, 0),]
         for i in self.comeca:
-            nvlinha = Turtle('square')
-            nvlinha.color('white')
+            nvlinha = Turtle(shape=self.FormaCobra)
             nvlinha.penup()
+            nvlinha.color(self.CorCobra)
             nvlinha.goto(i)
             self.segm.append(nvlinha)
     
@@ -23,6 +26,7 @@ class Snake:
             nx = self.segm[segnum -1].xcor()
             ny = self.segm[segnum -1].ycor()
             self.segm[segnum].goto(nx, ny)
+            self.segm[segnum].setheading(round(self.segm[segnum - 1].heading()))
         self.segm[0].forward(20)
         self.Comer()
 
@@ -68,9 +72,9 @@ class Snake:
     def Comeu(self):
         self.xcord = (self.segm[-1].xcor())
         self.ycord = (self.segm[-1].ycor())
-        linha = Turtle('square')
+        linha = Turtle(self.FormaCobra)
         self.LocalFruta()
-        linha.color('white')
+        linha.color(self.CorCobra)
         linha.penup()
         linha.goto(self.xcord, self.ycord)
         self.segm.append(linha)
