@@ -7,7 +7,7 @@ while True:
         with open('Pontucao.txt', 'r') as placar:
             print(placar.read())
     elif resposta.lower() == 'jogar':
-        sleep(5)
+        sleep(2)
         On = True
         tela = Screen()
         tela.textinput('COMEÇOU!', 'VOCÊ ESTA PRONTO?')
