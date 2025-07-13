@@ -1,2 +1,4 @@
 Nome: Heitor | Pontos: 18
 Nome: Teste3 | Pontos: 2
+Nome: Heto1 | Pontos: 4
+Nome: hetor reste 2 | Pontos: 0

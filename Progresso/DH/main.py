@@ -27,7 +27,7 @@ def pintar():
     frank.forward(0)
     frank.penup()
 def andando():
-    ponto()
+    pintar()
     for i in range (1, 8):
         frank.forward(25)
         pintar()
