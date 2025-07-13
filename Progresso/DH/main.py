@@ -3,8 +3,7 @@ from random import choice
 from turtle import *
 # Verificar se arquivo não esta corrompido :)
 cor = colorgram.extract("maluco.jpg", 100)
-# Por algum motivo esse programa so funciona aqui: C:\Users\heiti\DH\damianh.py
-# Talvez porque no OneDrive não funcione
+# Não funciona no OneDrive/Nuvem
 ponto_zero = -150.00
 end = len(cor)
 lista_cores = []
