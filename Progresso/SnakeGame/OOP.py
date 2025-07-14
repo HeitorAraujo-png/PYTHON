@@ -13,7 +13,7 @@ class Snake:
         self.Cobra()
 
     def Cobra(self):
-        self.comeca = [(0,0), (-20, 0), (-40, 0),]
+        self.comeca = [(0,0), (-20, 0), (-40, 0)]
         for i in self.comeca:
             nvlinha = Turtle(shape=self.FormaCobra)
             nvlinha.penup()
