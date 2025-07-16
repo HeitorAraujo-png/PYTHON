@@ -55,6 +55,3 @@ class Level(Turtle):
         self.clear()
         self.teleport(0,0)
         self.write(align='center', arg='VOCÊ GANHOU!!!', font=('Arial', 50, 'bold'))
-        
-    def Teste(self):
-        print('OK')
