@@ -1,5 +1,0 @@
-op = float(input('Qual é o cateto oposto? '))
-ad = float(input('\nQual é o cateto adjacente? '))
-hipo = (op ** 2) + (ad ** 2)
-print('\nA sua hipotenusa é {}'.format (hipo))
-ang = input('\nqual seria o angulo desse triangulo retangulo? ')
