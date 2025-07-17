@@ -84,6 +84,7 @@ while True:
                         Hs.More(cor, snake.pontos)
                     else:
                         snake.Pontuacao()
+                        Hs.GameOver()
                         On = False
                     break
         tela.exitonclick()

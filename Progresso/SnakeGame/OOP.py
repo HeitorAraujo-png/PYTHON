@@ -107,10 +107,11 @@ class Pontos(Turtle):
 
     def __init__(self, cor, pontos):
         super().__init__()
+        self.cor = cor
         self.penup()
         self.hideturtle()
         self.teleport(0, 270)
-        if cor == "black":
+        if self.cor == "black":
             self.color("black")
         else:
             self.color("white")
@@ -140,7 +141,7 @@ class Pontos(Turtle):
         self.Hs.penup()
         self.Hs.hideturtle()
         self.Hs.teleport(100, 270)
-        if cor == "black":
+        if self.cor == "black":
             self.Hs.color("black")
         else:
             self.Hs.color("white")
@@ -148,3 +149,10 @@ class Pontos(Turtle):
             for i in hs:
                 self.Hs.write(align="center", arg=i, font=("Arial", 20, "normal"))
         return True
+
+    def GameOver(self):
+        self.HighScore(cor=(self.cor))
+        self.Hs.clear()
+        self.clear()
+        self.teleport(0,0)
+        self.write(align='center', arg='GAME OVER', font=('Oswald', 30, 'bold'))
