@@ -103,6 +103,7 @@ class Snake:
                     else:
                         wr.write(i)
 
+
 class Pontos(Turtle):
 
     def __init__(self, cor, pontos):
@@ -115,9 +116,7 @@ class Pontos(Turtle):
             self.color("black")
         else:
             self.color("white")
-        self.write(
-            align="center", arg=f"Score: {pontos}", font=("Arial", 20, "normal")
-        )
+        self.write(align="center", arg=f"Score: {pontos}", font=("Arial", 20, "normal"))
 
     def More(self, opa, pontos):
         self.clear()
@@ -154,5 +153,5 @@ class Pontos(Turtle):
         self.HighScore(cor=(self.cor))
         self.Hs.clear()
         self.clear()
-        self.teleport(0,0)
-        self.write(align='center', arg='GAME OVER', font=('Oswald', 30, 'bold'))
+        self.teleport(0, 0)
+        self.write(align="center", arg="GAME OVER", font=("Oswald", 30, "bold"))
