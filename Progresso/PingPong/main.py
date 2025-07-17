@@ -1,8 +1,5 @@
 from turtle import Screen
-from RAQUETE import Players
-from BOLA import Bola
-from TABELA import Tabela
-from BACKGROUND import Fundo
+from OOP import *
 linha = Fundo()
 placar = Tabela()
 janela = Screen(); janela.setup(820, 500);janela.bgcolor('black');janela.title('SNAKE GAME')
