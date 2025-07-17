@@ -1,14 +1,10 @@
-from OOP import Snake
+from OOP import *
 from time import sleep
 from turtle import Screen
 while True:
-    resposta = input('Você deseja jogar ou ver o placar de jogadores? [PLACAR/JOGAR/SAIR] ').strip()
-    if resposta.lower() == 'placar':
-        with open('Pontucao.txt', 'r') as placar:
-            print(placar.read())
-    elif resposta.lower() == 'jogar':
         sleep(0.5)
         On = True
+        opa = False
         print('Vamos definifir as cores e as formas da cobra!')
         while True:
             cor = input('''
@@ -60,11 +56,11 @@ while True:
         tela.textinput('COMEÇOU!', 'VOCÊ ESTA PRONTO?')
         while On:
             snake = Snake(cor, forma)
+            Hs = Pontos(cor, 0)
+            Hs.More(0, opa)
             tela.setup(width=600, height=600)
-            if cor != 'black':
-                tela.bgcolor('black')
-            else:
-                tela.bgcolor('white')
+            if cor != 'black': tela.bgcolor('black')
+            else: tela.bgcolor('white')
             tela.title('Snake Game')
             tela.tracer(0)
             tela.onkey(snake.Direita, 'Right') or tela.onkey(snake.Direita, 'd')
@@ -73,22 +69,22 @@ while True:
             tela.onkey(snake.Baixo, 'Down') or tela.onkey(snake.Baixo, 's')
             tela.listen()
             while On:
+                Hs.More(opa, snake.pontos)
                 tela.update()
                 sleep(0.1)
                 snake.Move()
                 if snake.Bateu():
                     resposta = tela.textinput('DERROTA', 'Você perdeu! Deseja continuar? [SIM/NÃO]').strip()
                     if resposta.lower() == 'sim':
+                        snake.Pontuacao()
                         tela.resetscreen()
                         tela.clear()
                         snake.LocalFruta()
-                        break
+                        opa = Hs.HighScore(cor)
+                        Hs.More(cor, snake.pontos)
                     else:
+                        snake.Pontuacao()
                         On = False
+                    break
         tela.exitonclick()
-        snake.Pontuacao()
         break
-    elif resposta.lower() == 'sair':
-        break
-    else:
-        print('Erro! Tente novamente.')
