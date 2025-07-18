@@ -648,7 +648,7 @@ class Menu:
                     print("Escolha invalida")
         else:
             print(
-                f"""{'USER'^25}
+                f"""{'USER':^25}
             Escolha uma opção:
             1. Adicionar aos contato
             2. Ler Contatos
