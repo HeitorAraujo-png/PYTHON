@@ -30,6 +30,5 @@
    📫 Entre em contato
 
 - 💼 [LinkedIn](https://www.linkedin.com/in/heitorobaraujo/)
-- 💻 [GitHub](https://github.com/HeitorAraujo-png)
 
 Sinta-se à vontade para me seguir, dar sugestões ou iniciar uma colaboração. Vamos criar algo incrível juntos! 💻⚡
