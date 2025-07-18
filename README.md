@@ -1,8 +1,6 @@
- 👋 Olá! Eu sou o Heitor Araujo
+ 👋 Olá!
 
-🎯 Desenvolvedor Python apaixonado por transformar lógica em soluções práticas.  
-💡 Sempre explorando novas ideias — de pequenos jogos a sistemas completos com controle de usuários, backup e painel administrativo.  
-🚀 Foco em escrever código limpo, modular e com boas práticas (OOP, Git, versionamento, e mais).
+ Nesse repositorio esta todo meu apredizado e projetos em python!
 
 ---
 
@@ -17,13 +15,8 @@
 
 ---
 
- 🕹️ Projetos em destaque
-
-   🐍 Snake Game Personalizado
-- Versão estilizada do clássico Snake.
-- Personalização de cor, forma e pontuação com **sistema de High Score** salvo em arquivo.
-- Código totalmente orientado a objetos.
-
+ 🕹️ Projetos em desenvolvimento
+ 
    🧠 Sistema de Ordens de Serviço
 - App completo com login/admin, gestão de usuários e backup.
 - Construído em Python com plano de migração para Django.
@@ -31,15 +24,6 @@
    📅 Agenda & Gerenciador de Usuários
 - Aplicativo de agendamento com controle de sessões e permissões.
 - Organização modular do código, foco em escalabilidade.
-
----
-
-   📈 Em constante evolução
-
-Atualmente estudando:
-- 🛠️ Django + APIs REST
-- 🧠 Algoritmos e estruturas de dados
-- 📦 Deploy e distribuição de aplicações Python
 
 ---
 
