@@ -11,7 +11,7 @@
 - 🧪 **Testes**, depuração e boas práticas
 - 🗂️ **Git/GitHub** para versionamento e colaboração
 - 🌐 **Django** (em andamento) para sistemas web robustos
-- 📁 Estruturação e manipulação de arquivos (.txt, .json, etc)
+- 📁 Estruturação e manipulação de arquivos (.txt, .json, csv, etc)
 
 ---
 
