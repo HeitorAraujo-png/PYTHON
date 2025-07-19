@@ -30,5 +30,6 @@
    📫 Entre em contato
 
 - 💼 [LinkedIn](https://www.linkedin.com/in/heitorobaraujo/)
+- ✉️ [Email](mailto:hbrandaooliveira4@gmail.com)
 
 Sinta-se à vontade para me seguir, dar sugestões ou iniciar uma colaboração. Vamos criar algo incrível juntos! 💻⚡
