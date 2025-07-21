@@ -1,4 +1,5 @@
 from re import search
+import hashlib as hl
 
 
 # O codigo vai ser documentado ainda! Aguarde ate as proximas atualizações...
@@ -226,36 +227,27 @@ class Segurança:
             definir = input("Você quer fazer [LOGIN/CADASTRO]? ").upper().strip()
             if definir == "CADASTRO":
                 while True:
-                    while True:
-                        achamos = False
-                        self.user = input("Digite seu user: ").strip()
-                        with open("AdmUser.txt", "r") as log:
-                            texto = log.readlines()
-                        for linha in texto:
-                            if f"Usuario: {self.user}" in linha:
-                                achamos = True
-                        if achamos:
-                            print(
-                                f'Nome de usuario "{self.user}" já cadastrado. Tente outro...'
-                            )
-                        else:
-                            break
+                    self.user = self.CriaUser()
                     while True:
                         verifica, senha = self.VerificaSenha()
                         if not verifica:
                             self.senha = senha
-                            with open("AdmUser.txt", "a") as cadastrar:
-                                cadastrar.writelines(
-                                    f"Usuario: {self.user} | Senha: {self.senha} | Acesso: {self.Acesso} \n"
-                                )
-                            self.user_acesso = True
-                            self.admin_acesso = False
-                            break
+                            with open("AdmUser.txt", "a") as nmrl:
+                                with open("AdmUserHash.txt", "a") as cadastrar:
+                                    nmrl.writelines(
+                                        f"UsuarioHash: {self.user} | SenhaHash: {self.Hash(senha)} | Acesso: User \n"
+                                    )
+                                    cadastrar.writelines(
+                                        f'{self.Hash(f"UsuarioHash: {self.Hash(self.user)} | SenhaHash: {self.Hash(self.senha)} | Acesso: User")} \n'
+                                    )
+                                self.user_acesso = True
+                                self.admin_acesso = False
+                                return
                         else:
                             print(", ".join(verifica), ".")
             elif definir == "LOGIN":
                 while True:
-                    with open("AdmUser.txt", "r") as arquivo:
+                    with open("AdmUserHash.txt", "r") as arquivo:
                         texto = arquivo.readlines()
                     user = input("Digite seu usuario: ").strip()
                     tentativas = input(
@@ -264,16 +256,27 @@ class Segurança:
                     if tentativas.lower() != "sair":
                         for linha in texto:
                             if (
-                                f"Usuario: {user}" in linha
-                                and f"Senha: {tentativas}" in linha
-                                and tentativas != ""
+                                self.Hash(
+                                    f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(tentativas)} | Acesso: User"
+                                )
+                                in linha
                             ):
                                 self.user_acesso = True
                                 self.senha = tentativas
                                 self.user = user
-                                if "Acesso: ADMIN" in linha:
-                                    self.admin_acesso = True
                                 print("Usuario Logado com sucesso!")
+                                return
+                            if (
+                                self.Hash(
+                                    f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(tentativas)} | Acesso: ADMIN"
+                                )
+                                in linha
+                            ):
+                                self.user_acesso = True
+                                self.senha = tentativas
+                                self.user = user
+                                self.admin_acesso = True
+                                print("ADMIN Logado com sucesso!")
                                 return
                         if not self.user_acesso:
                             print("Usuario ou senha incorreta!")
@@ -285,6 +288,28 @@ class Segurança:
                         return
             else:
                 print("Tente novamente!")
+
+    def CriaUser(self):
+        while True:
+            achamos = False
+            self.user = input("Digite seu user: ").strip()
+            user = self.Hash(self.user)
+            with open("AdmUserHash.txt", "r") as log:
+                for linha in log.readlines():
+                    if f"UsuarioHash: {user}" in linha:
+                        achamos = True
+                if achamos:
+                    print(
+                        f'Nome de usuario "{self.user}" já cadastrado. Tente outro...'
+                    )
+                if self.user == "":
+                    print("Usuario invalido!")
+                else:
+                    return self.user
+
+    def Hash(self, hashble):
+        hash = hl.sha256(hashble.encode()).hexdigest()
+        return hash
 
     def VerificaSenha(self):
         erro = []
@@ -312,12 +337,11 @@ class Segurança:
                 'Digite a sua senha: [Escreva "Sair" para cancelar]: '
             ).strip()
             if senha.lower() != "sair":
-                with open("AdmUser.txt", "r") as log:
-                    for linha in log:
-                        if (
-                            f"Usuario: {usuario}" in linha
-                            and f"Senha: {senha}" in linha
-                            and f"Acesso: ADMIN" in linha
+                with open("AdmUserHash.txt", "r") as log:
+                    for linha in log.readlines():
+                        if self.Hash(
+                            f"UsuarioHash: {self.Hash(usuario)} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN"
+                            in linha
                         ):
                             return True
             else:
@@ -338,19 +362,35 @@ class Segurança:
                     user = input(
                         'Qual usuario você deseja deixa como ADMIN? [Digite "Sair" para parar] '
                     ).strip()
+                    senha = input("Qual a senha desse usuario? ")
                     if user.lower() != "sair":
-                        with open("AdmUser.txt", "r") as leitura:
-                            texto = leitura.readlines()
-                        with open("AdmUser.txt", "w") as escreve:
-                            for linha in texto:
-                                if f"Usuario: {user}" in linha:
-                                    escreve.write(
-                                        f"{linha[:linha.find('Acesso: User')]} Acesso: ADMIN"
-                                    )
-                                    print(f"Usuario: {user} agora é ADMIN!")
-                                else:
-                                    escreve.write(linha)
-                            break
+                        with open("AdmUserHash.txt", "r") as leitura:
+                            with open("AdmUserHash.txt", "w") as escreve:
+                                with open("AdmUser.txt", "w") as nmrl:
+                                    for linha in leitura.readlines():
+                                        if (
+                                            self.Hash(
+                                                f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(senha)} | Acesso: User"
+                                            )
+                                            in linha
+                                        ):
+                                            escreve.write(
+                                                f'{self.Hash(f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN")} \n'
+                                            )
+                                            nmrl.write(
+                                                f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN"
+                                            )
+                                            print(f"Usuario: {user} agora é ADMIN!")
+                                        else:
+                                            escreve.write(linha)
+                                    for i in nmrl.readlines():
+                                        if f"UsuariosHash: {user}" in linha:
+                                            nmrl.write(
+                                                f"UsuarioHash: {(user)} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN \n"
+                                            )
+                                        else:
+                                            nmrl.write(i)
+                                    break
                     elif user.lower() == "sair":
                         break
 
@@ -363,81 +403,110 @@ class Segurança:
                         "Qual o nome do usuario que você deseja trocar de nome? "
                     ).strip()
                     troca = input("Qual vai ser o novo nome? ").strip()
-                    if pesquisa == "" or troca == "":
+                    senha = input("Qual a senha desse usuario? ")
+                    if troca == "sair" or senha == "sair":
                         return
-                    with open("AdmUser.txt", "r") as leitura:
-                        texto = leitura.readlines()
-                    with open("AdmUser.txt", "w") as escreve:
-                        for linha in texto:
-                            if f"Usuario: {pesquisa}" in linha:
-                                escreve.write(
-                                    f"Usuario: {troca}{linha[(linha.find(' | Senha: ')):]}"
-                                )
-                                print(f"Nome trocado!")
-                            else:
-                                escreve.write(linha)
+                    if troca == "":
                         return
+                    with open("AdmUserHash.txt", "r") as leitura:
+                        with open("Admuser.txt", "w") as nmrl:
+                            with open("AdmUserHash.txt", "w") as escreve:
+                                for linha in leitura.readlines():
+                                    if (
+                                        self.Hash(
+                                            f"UsuarioHash: {self.Hash(pesquisa)} | SenhaHash: {self.Hash(senha)} | Acesso: User"
+                                        )
+                                        in linha
+                                    ):
+                                        escreve.write(
+                                            f'{self.Hash(f"UsuarioHash: {self.Hash(troca)} | SenhaHash: {self.Hash(senha)} | Acesso: User")} \n'
+                                        )
+                                        print(f"Nome trocado!")
+                                    else:
+                                        escreve.write(linha)
+                                for i in nmrl.readlines():
+                                    if f"UsuariosHash: {pesquisa}" in linha:
+                                        nmrl.write(
+                                            f"UsuarioHash: {troca} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN \n"
+                                        )
+                                    else:
+                                        nmrl.write(i)
+                                break
 
     def TrocaSenha(self):
         if self.admin_acesso:
             verifica = self.VerificaAdmin()
             if verifica:
                 while True:
-                    User = Password = False
                     user = input(
                         "Qual o nome do usuario que você deseja trocar de senha? "
                     ).strip()
                     password = input("Qual é a senha dele atual? ")
-                    if user == "" or password == "":
+                    if user == "" or password == "" or password == "sair":
                         return
-                    with open("AdmUser.txt", "r") as log2:
-                        for linha2 in log2:
-                            if f"Usuario: {user}" in linha2:
-                                User = True
-                            if f"Senha: {password}" in linha2:
-                                Password = True
-                        if Password == False or User == False:
-                            print("Usuario ou senha invalido! Tente novamente.")
-                    while User and Password:
+                    while True:
                         verificar, senha = self.VerificaSenha()
                         if not verificar:
                             break
                         else:
                             print(", ".join(verificar), ".")
-                    with open("AdmUser.txt", "r") as log:
-                        texto = log.readlines()
-                    with open("AdmUser.txt", "w") as escreve:
-                        for linha in texto:
-                            if (
-                                f"Usuario: {user}" in linha
-                                and f"Senha: {password}" in linha
-                            ):
-                                escreve.write(
-                                    f"Usuario: {user} | Senha: {senha} | Acesso: {linha[(linha.find('Acesso: ')):]} \n"
-                                )
-                                print(f"Senha trocada!")
-                            else:
-                                escreve.write(linha)
-                        return
+                    with open("AdmUser.txt", "w") as log:
+                        with open("AdmUserHash.txt", "w") as escreve:
+                            for linha in log.readlines():
+                                if (
+                                    self.Hash(
+                                        f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(password)} | Acesso: User"
+                                    )
+                                    in linha
+                                ):
+                                    escreve.write(
+                                        f'{self.Hash(f"UsuarioHash: {self.Hash(user)} | SenhaHash: {self.Hash(senha)} | Acesso: User")} \n'
+                                    )
+                                    print(f"Senha trocada!")
+                                else:
+                                    escreve.write(linha)
+                            for i in log.readlines():
+                                if (
+                                    f"UsuariosHash: {user}" in linha
+                                    and f"SenhaHash: {self.Hash(password)}" in linha
+                                    and f"Acesso: User" in linha
+                                ):
+                                    log.write(
+                                        f"UsuarioHash: {(user)} | SenhaHash: {self.Hash(senha)} | Acesso: user \n"
+                                    )
+                                else:
+                                    log.write(i)
+                            return
 
     def DeletaUser(self):
         if self.admin_acesso:
             condicao = self.VerificaAdmin()
             if condicao:
                 pesquisa = input("Qual o usuario que você deseja deletar? ").strip()
-                with open("AdmUser.txt", "r") as log:
-                    texto = log.readlines()
-                with open("AdmUser.txt", "w") as escreve:
-                    for linha in texto:
-                        if (
-                            f"Usuario: {pesquisa}" in linha
-                            and not f"Acesso: ADMIN" in linha
-                        ):
-                            escreve.write("")
-                            print(f"Usuario deletado!")
-                        else:
-                            escreve.write(linha)
-                    return
+                senha = input("Qual a senha desse usuario? ")
+                with open("AdmUser.txt", "w") as log:
+                    with open("AdmUserHash.txt", "w") as escreve:
+                        for linha in log.readlines():
+                            if (
+                                self.Hash(
+                                    f"UsuarioHash: {self.Hash(pesquisa)} | SenhaHash: {self.Hash(senha)} | Acesso: User"
+                                )
+                                in linha
+                            ):
+                                escreve.write("")
+                                print(f"Usuario deletado!")
+                            else:
+                                escreve.write(linha)
+                        for i in log.readlines():
+                            if (
+                                f"Usuarioshash: {pesquisa}" in linha
+                                and f"SenhaHash: {self.Hash(senha)}" in linha
+                                and not f"Acesso: ADMIN" in linha
+                            ):
+                                log.write("")
+                            else:
+                                log.write(i)
+                        return
 
     def DeletaAdm(self):
         if self.admin_acesso:
@@ -456,21 +525,31 @@ class Segurança:
                     if ok == "SIM":
                         break
                     else:
+                        pass
+                with open("AdmUser.txt", "w") as log:
+                    with open("AdmUserHash.txt", "w") as escreve:
+                        for linha in escreve.readlines():
+                            if (
+                                self.Hash(
+                                    f"UsuarioHash: {self.Hash(pesquisa)} | SenhaHash: {self.Hash(pesquisa_senha_admin)} | Acesso: ADMIN"
+                                )
+                                in linha
+                            ):
+                                escreve.write("")
+                                print(f"Usuario deletado!")
+                            else:
+                                escreve.write(linha)
+                        for i in log.readlines():
+                            if (
+                                f"Usuarioshash: {pesquisa}" in linha
+                                and f"SenhaHash: {self.Hash(pesquisa_senha_admin)}"
+                                in linha
+                                and f"Acesso: ADMIN" in linha
+                            ):
+                                log.write("")
+                            else:
+                                log.write(i)
                         return
-                with open("AdmUser.txt", "r") as log:
-                    texto = log.readlines()
-                with open("AdmUser.txt", "w") as escreve:
-                    for linha in texto:
-                        if (
-                            f"Usuario: {pesquisa}" in linha
-                            and f"Senha: {pesquisa_senha_admin}" in linha
-                            and f"Acesso: ADMIN" in linha
-                        ):
-                            escreve.write("")
-                            print(f"ADMIN deletado!")
-                        else:
-                            escreve.write(linha)
-                    return
 
     def CriaVariosUser(self):
         if self.admin_acesso:
@@ -485,28 +564,31 @@ class Segurança:
                         if Cria.lower() == "sair":
                             return
                         with open("AdmUser.txt", "r") as log:
-                            texto = log.readlines()
-                        for linha in texto:
-                            if f"Usuario: {Cria}" in linha:
-                                achou = True
-                        if achou:
-                            print(
-                                f'Nome de usuario "{Cria}" já cadastrado. Tente outro...'
-                            )
-                        else:
-                            break
-                    while True:
-                        verificar, senha = self.VerificaSenha()
-                        if not verificar:
-                            break
-                        else:
-                            print(", ".join(verificar), ".")
-                    with open("AdmUser.txt", "a") as escreve:
-                        escreve.writelines(
-                            f"Usuario: {Cria} | Senha: {senha} | Acesso: User \n"
-                        )
-                        print(f"User {Cria} cadastrado")
-                        self.user_acesso = True
+                            for linha in log.readlines():
+                                if f"Usuario: {Cria}" in linha:
+                                    achou = True
+                            if achou:
+                                print(
+                                    f'Nome de usuario "{Cria}" já cadastrado. Tente outro...'
+                                )
+                            else:
+                                break
+                        while True:
+                            verificar, senha = self.VerificaSenha()
+                            if not verificar:
+                                break
+                            else:
+                                print(", ".join(verificar), ".")
+                        with open("AdmUser.txt", "a") as crv:
+                            with open("AdmUserHash.txt", "a") as escreve:
+                                escreve.writelines(
+                                    f'{self.Hash(f"UsuarioHash: {self.Hash(Cria)} | SenhaHash: {self.Hash(senha)} | Acesso: User")} \n'
+                                )
+                                print(f"User {Cria} cadastrado")
+                                self.user_acesso = True
+                                crv.write(
+                                    f"UsuarioHash: {(Cria)} | SenhaHash: {self.Hash(senha)} | Acesso: User \n"
+                                )
 
     def CriaVariosAdmin(self):
         if self.admin_acesso:
@@ -521,16 +603,15 @@ class Segurança:
                         if Cria.lower() == "sair":
                             return
                         with open("AdmUser.txt", "r") as log:
-                            texto = log.readlines()
-                        for linha in texto:
-                            if f"Usuario: {Cria}" in linha:
-                                achou = True
-                        if achou:
-                            print(
-                                f'Nome de usuario "{Cria}" já cadastrado. Tente outro...'
-                            )
-                        else:
-                            break
+                            for linha in log.readlines():
+                                if f"Usuario: {Cria}" in linha:
+                                    achou = True
+                            if achou:
+                                print(
+                                    f'Nome de usuario "{Cria}" já cadastrado. Tente outro...'
+                                )
+                            else:
+                                break
                     while True:
                         verifica, senha = self.VerificaSenha()
                         if not verifica:
@@ -538,18 +619,22 @@ class Segurança:
                         else:
                             print(", ".join(verifica), ".")
                     with open("AdmUser.txt", "a") as escreve:
-                        escreve.writelines(
-                            f"Usuario: {Cria} | Senha: {senha} | Acesso: ADMIN \n"
-                        )
-                        print(f"ADMIN {Cria} cadastrado")
-                        self.user_acesso = True
-                        self.admin_acesso = True
+                        with open("AdmUserHash.txt", "a") as texto:
+                            escreve.writelines(
+                                f"UsuarioHash: {(Cria)} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN"
+                            )
+                            texto.write(
+                                f"{self.Hash(f'UsuarioHash: {self.Hash(Cria)} | SenhaHash: {self.Hash(senha)} | Acesso: ADMIN')} \n"
+                            )
+                            print(f"ADMIN {Cria} cadastrado")
+                            self.user_acesso = True
+                            self.admin_acesso = True
 
     def TabelaUserAdmin(self):
         with open("AdmUser.txt", "r") as log:
             for linha in log:
                 print(
-                    f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}"
+                    f"{linha[:(linha.find('SenhaHash:'))]}{linha[(linha.find('Acesso: ')):]}"
                 )
 
     def TabelaUser(self):
@@ -557,7 +642,7 @@ class Segurança:
             for linha in log:
                 if f"Acesso: User" in linha:
                     print(
-                        f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}"
+                        f"{linha[:(linha.find('SenhaHash:'))]}{linha[(linha.find('Acesso: ')):]}"
                     )
 
     def TabelaAdmin(self):
@@ -565,7 +650,7 @@ class Segurança:
             for linha in log:
                 if f"Acesso: ADMIN" in linha:
                     print(
-                        f"{linha[:(linha.find('Senha:'))]}{linha[(linha.find('Acesso: ')):]}"
+                        f"{linha[:(linha.find('SenhaHash:'))]}{linha[(linha.find('Acesso: ')):]}"
                     )
 
     def TabelaSecreta(self):
@@ -588,20 +673,22 @@ class Segurança:
                     self.TabelaUserAdmin
                     if quantia != 0:
                         with open("AdmUser.txt", "w") as escreve:
-                            for linha in texto:
-                                if quantia == counter:
-                                    if f"Acesso: ADMIN" in linha:
-                                        certeza = input(
-                                            f"A linha {counter} é a linha do ADMIN {linha[linha.find('Usuario: '):linha.find(' |')]}, você tem certeza que quer deletar essa linha? [SIM/NAO]"
-                                        )
-                                        if certeza.upper() == "SIM":
-                                            escreve.write("")
-                                            print("Linha apagada!")
-                                    else:
+                            with open("AdmUserHash.txt", "w") as txt:
+                                for linha in texto:
+                                    if quantia == counter:
                                         escreve.write("")
-                                else:
-                                    escreve.write(linha)
-                                counter += 1
+                                        print("Linha apagada!")
+                                    else:
+                                        escreve.write(linha)
+                                    counter += 1
+                                counter = 1
+                                for i in txt:
+                                    if quantia == counter:
+                                        txt.write("")
+                                        print("Linha apagada!")
+                                    else:
+                                        txt.write(i)
+                                    counter += 1
 
 
 class Menu:
