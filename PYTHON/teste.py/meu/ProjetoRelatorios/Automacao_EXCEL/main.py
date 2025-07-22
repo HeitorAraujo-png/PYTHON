@@ -1,7 +1,7 @@
 import pandas as pd
 from Dps import *
 
-relatorio = Relatorios()
+relatorio = RelatorioTeste()
 relatorio.Converte()
 '''Teste'''
 # dias = relatorio.Dias()
