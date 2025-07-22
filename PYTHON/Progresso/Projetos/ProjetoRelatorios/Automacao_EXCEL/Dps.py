@@ -52,27 +52,30 @@ class Relatorio:
             ic = f'{''.join((pre[0], pre[1]))}'
             cc = f'{''.join((pre[2], pre[3]))}'
             if ic == '81':
-                lc = 'TVCA'
+                emp = 'TVCA'
             if ic == '65':
-                lc = 'Portal MT'
+                emp = 'Portal MT'
             if ic == '69':
-                lc = 'FMCA'
+                emp = 'FMCA'
             if ic == '85':
-                lc = 'On Line(MT)'
+                emp = 'On Line(MT)'
             if cc == '03':
-                lista.append(f'{centro[i]} - ADM - {lc}')
+                tipo = 'ADM'
             if cc == '06':
-                lista.append(f'{centro[i]} - RH - {lc}')
+                tipo = 'RH'
             if cc == '10':
-                lista.append(f'{centro[i]} - COMERCIA - {lc}')
+                tipo = 'COMERCIA'
             if cc == '11':
-                lista.append(f'{centro[i]} - OPEC - {lc}')
+                tipo = 'OPEC'
+            if cc == '12':
+                tipo = 'MKT'
             if cc == '14':
-                lista.append(f'{centro[i]} - PROGRAMAÇÃO - {lc}')
+                tipo = 'PROGRAMAÇÃO'
             if cc == '15':
-                lista.append(f'{centro[i]} - JORNALISMO - {lc}')
+                tipo = 'JORNALISMO'
             if cc == '21':
-                lista.append(f'{centro[i]} - TECNOLOGIA - {lc}')
+                tipo = 'TECNOLOGIA'
+            lista.append(f'{centro[i]} - {tipo} - {emp}')
         return self.remove(lista)
 
     def money(self):
