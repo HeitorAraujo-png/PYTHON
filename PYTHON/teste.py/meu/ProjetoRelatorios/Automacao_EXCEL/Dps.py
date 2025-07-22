@@ -1,72 +1,27 @@
 import pandas as pd
-
-class Relatorios:
+                
+class Relatorio:
     
     def __init__(self):
-        self.departamento = pd.read_csv(r'CSV_ARQ\Dptdia.csv', encoding='latin1')
-        self.Add()
-        self.relatorio = pd.read_csv(r'CSV_ARQ\relatorio.csv', encoding='latin1')
-        
-
-            
-    def remove(self, lista):
-        lista.sort()
-        return list(dict.fromkeys(lista))
-        
-    def Dias(self):
-        lista = []
-        for i in self.departamento.DATA:
-            lista.append(i)
-        return self.remove(lista)
-        
-    def CentroCustos(self):
-        lista = []
-        for i in self.departamento.CC:
-            lista.append(i)
-        return self.remove(lista)
-        
-    def Converte(self):
-        centros = self.CentroCustos()
-        dias = self.Dias()
-        for cc in centros:
-            nova_linha = {'DPT': cc}
-            soma = 0
-            for dia in dias:
-                qtd = len(self.departamento[(self.departamento['CC'] == cc) & (self.departamento['DATA'] == dia)])
-                nova_linha[dia] = qtd
-                soma += qtd
-            
-            nova_linha['Total'] = soma
-            nova_linha['Valor total'] = f'R$ {soma * 20:.2f}'
-            
-            
-            self.relatorio = pd.concat([self.relatorio, pd.DataFrame([nova_linha])], ignore_index=True)
-        for dia in dias:
-            linha = {dia: 0}
-            soma = 0
-            for cc in centros:
-                qtd = len(self.departamento[(self.departamento['C.C'] == cc) & (self.departamento['DATA'] == dia)])
-                soma += qtd
-            linha[dia] = soma
-            self.relatorio = pd.concat([self.relatorio, pd.DataFrame([linha])], ignore_index=True)
-
-        self.relatorio.to_csv(r'CSV_ARQ\relatorio_atualizado.csv', index=False, encoding='latin1')
-        # self.relatorio.to_excel(r"EXCEL_ARQ\relatorio_atualizado.xlsx", index=False)
-                
-                
-class RelatorioTeste:
-    
-    def __init__(self):
-        self.departamento = pd.read_csv(r'CSV_ARQ\Dptdia.csv', encoding='latin1')
+        self.LinkPathPTD = r'CSV_ARQ\Dptdia.csv'
+        self.LinkPathRelatorio = r'CSV_ARQ\relatorio.csv'
+        self.departamento = pd.read_csv(self.LinkPathPTD, encoding='latin1')
         self.dias = self.Dias()
         self.Add()
         self.centros = self.CentroCustos()
-        self.relatorio = pd.read_csv(r'CSV_ARQ\relatorio.csv', encoding='latin1')
+        self.relatorio = pd.read_csv(self.LinkPathRelatorio, encoding='latin1')
+
+    def replace(self):
+        with open(self.LinkPathPTD, 'r', encoding='latin1') as arq:
+            arq = arq.read()
+            with open(self.LinkPathPTD, 'w', encoding='latin1') as csv:
+                for i in arq:
+                    csv.write(arq.replace(';', ','))
         
     def Add(self):
-        with open(r'CSV_ARQ\relatorio.csv', 'r', encoding='latin1') as arq:
-            arq = (arq.readlines())
-            with open(r'CSV_ARQ\relatorio.csv', 'w', encoding='latin1') as csv:
+        with open(self.LinkPathRelatorio, 'r', encoding='latin1') as arq:
+            arq = arq.readlines()
+            with open(self.LinkPathRelatorio, 'w', encoding='latin1') as csv:
                 for i in arq:
                     csv.write(f'{i[:i.find(',') + 1]}{','.join(self.dias)},{i[i.find('Total'):]}')
 

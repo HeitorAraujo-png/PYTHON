@@ -1,7 +1,9 @@
 import pandas as pd
 from Dps import *
 
-relatorio = RelatorioTeste()
+# linkDPT = r'CSV_ARQ\Dptdia.csv'
+# linkRELATORIO = r'CSV_ARQ\relatorio.csv'
+relatorio = Relatorio()
 relatorio.Converte()
 '''Teste'''
 # dias = relatorio.Dias()
