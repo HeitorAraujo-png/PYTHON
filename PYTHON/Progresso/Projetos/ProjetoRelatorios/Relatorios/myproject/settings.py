@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0q!9fll)uqa=2=$%%hhp@hm4&q6$5e)=*b(a8qt-t2u^i6+$$5'
+SECRET_KEY = 'a8554ab48654005e5b900283ee5286dad04834cbf876b20ce56ffdd792ab8f51'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['RelatiosMensaisTVCA', 'www.RelatoriosMensaisTVCA']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'uploadapp',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +122,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+BASIC_ROOT = os.path.join(BASE_DIR, 'basic')
+BASIC_URL = '/basic/'
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'uploadapp/static')]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

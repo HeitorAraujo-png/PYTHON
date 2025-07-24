@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'uploadapp/style.css' %}">
+    <title>Upload de arquivos</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Envio de Arquivos</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                <label>Relatorio de 1 a 15 dias</label><br>
+                <input type="file" name="relatorio1" required><br><br>
+                <label>Relatorio de 16 a 31 dias</label><br>
+                <input type="file" name="relatorio2" required><br><br>
+                <button type="submit">Processar</button>
+            </form>
+
+            {% if output_url %}
+            <p><a href="{{ output_url }}" download>Baixar Relatorio Final</a></p>
+            {% endif %}
+
+    </div>
+    
+</body>
+</html>
