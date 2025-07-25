@@ -1,15 +1,19 @@
 import pandas as pd
+import os
+import openpyxl
                 
 class Relatorio:
     
     def __init__(self):
+        if os.path.exists('relatorio_atualizado.xlsx'):
+            os.remove('relatorio_atualizado.xlsx')
         self.Converter()
-        self.LinkPathPTD = r'RelatoriosMensaisCSV\DPTDIA.csv'
+        self.LinkPathPTD = r'CSV_ARQ\DPTDIA.csv'
         self.departamento = pd.read_csv(self.LinkPathPTD, encoding='latin1')
         self.replace()
         self.dias = self.Dias()
         self.centros = self.CentroCustos()
-        self.LinkPathRelatorio = r'CSV_ARQ\relatorio.csv'
+        self.LinkPathRelatorio = r'basic\relatorio.csv'
         self.relatorio = pd.read_csv(self.LinkPathRelatorio, encoding='latin1')
         
     def Converter(self):
@@ -17,10 +21,10 @@ class Relatorio:
         relatorio2 = pd.read_excel(r'RelatoriosMensaisEXCEL\Dptdia16-31.xlsx', parse_dates=["DATA"])
         relatorio1['DATA'] = relatorio1['DATA'].dt.strftime('%d/%m/%y')
         relatorio2['DATA'] = relatorio2['DATA'].dt.strftime('%d/%m/%y')
-        relatorio1.to_csv(r'CSV_ARQ\DPT\DPT01-15.csv', index=False)
-        relatorio2.to_csv(r'CSV_ARQ\DPT\DPT16-31.csv', index=False)
+        relatorio1.to_csv(r'CSV_ARQ\DPT01-15.csv', index=False)
+        relatorio2.to_csv(r'CSV_ARQ\DPT16-31.csv', index=False)
         relatorio = pd.concat([relatorio1, relatorio2], ignore_index=True)
-        relatorio.to_csv(r'RelatoriosMensaisCSV\DPTDIA.csv')   
+        relatorio.to_csv(r'CSV_ARQ\DPTDIA.csv')   
 
     def replace(self):
         with open(self.LinkPathPTD, 'r', encoding='latin1') as arq:
@@ -90,7 +94,16 @@ class Relatorio:
                 soma += qtd
             money += soma
         return money
-
+    def ArrumarColunas(self):
+        lc = self.relatorio.columns
+        workbook = openpyxl.load_workbook('relatorio_atualizado.xlsx')
+        sheet = workbook.active
+        for i in lc:
+            sheet.column_dimensions[i].auto_size = True
+        if os.path.exists('relatorio_atualizado.xlsx'):
+            os.remove('relatorio_atualizado.xlsx')
+        workbook.save('relatorio_atualizado.xlsx')
+            
     def Converte(self):
         self.Add()
         linhas = []
@@ -133,3 +146,5 @@ class Relatorio:
         self.relatorio = pd.concat([self.relatorio, pd.DataFrame([linhas])], ignore_index=True)
         self.relatorio.to_csv(r'CSV_ARQ\relatorio_atualizado.csv', index=False, encoding='latin1')
         self.relatorio.to_excel(r"relatorio_atualizado.xlsx", index=False)
+        print(self.ArrumarColunas())
+        
