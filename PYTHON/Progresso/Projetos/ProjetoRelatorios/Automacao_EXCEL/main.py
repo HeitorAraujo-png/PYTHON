@@ -1,4 +1,3 @@
-import pandas as pd
 from Dps import *
 
 # linkDPT = r'CSV_ARQ\Dptdia.csv'
