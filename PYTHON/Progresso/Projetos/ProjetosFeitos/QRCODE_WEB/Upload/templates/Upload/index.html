@@ -28,7 +28,9 @@
                     <input type="text" name="nome" required><br><br>
                     <label >CONTEÚDO DO QRCODE</label><br>
                     <input type="text" name="link" required><br><br>
+                     {% if not out|lower|slice:"-4:" == ".png" %}
                     <button type="submit">GERAR QRCODE</button>
+                    {% endif%}
                 </form>
                 {% if out|lower|slice:"-4:" == ".png" %}
                 <form method="post" enctype="multipart/form-data">
