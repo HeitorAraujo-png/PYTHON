@@ -1,0 +1,34 @@
+body{
+    background-image: url('https://codigosdebarrasbrasil.com.br/wp-content/uploads/2019/09/codigo_qr-300x300.png');
+    background-position: center;
+    font-family: Arial;
+}
+
+.tela{
+    background-color: white;
+    opacity: 10%;
+    margin: -10px;
+    z-index: 1;
+    position: fixed;
+    width: 1500px;
+    height: 1000px;
+}
+.meio{
+    position: relative;
+    z-index: 10;
+    padding: 80px;
+    text-align: center;
+    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}
+.borda{   
+    background-color: white;
+    padding: 30px;
+    margin: auto;
+    width: 20%;
+    height: 30%;
+    border-radius: 40px;
+    box-shadow: 0 0 10p gray;
+}

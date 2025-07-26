@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'Upload/style.css' %}">
+    <title>QRCODES</title>
+</head>
+<body>
+    <div class="tela"></div>
+        <div class="meio">
+            <div class="borda">
+
+                <h2>QRCODE MAKER!</h2>
+                <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label >NOME DO SEU QRCODE</label><br>
+                <input type="text" name="nome" required><br><br>
+                <label >CONTEÚDO DO QRCODE</label><br>
+                <input type="text" name="link" required><br><br>
+                <button type="submit">GERAR QRCODE</button>
+            </form>
+            {% if out %}
+            <p><a href="{{ out }}" download onclick="this.style.display='none'">BAIXAR CODIGO QR</a></p>
+            
+            {% endif %}
+        </div>
+            
+            
+        </div>
+    </div>
+</body>
+</html>
