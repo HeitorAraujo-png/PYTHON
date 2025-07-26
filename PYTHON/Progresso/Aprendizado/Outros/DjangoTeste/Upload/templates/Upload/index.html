@@ -3,32 +3,45 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'Upload/style.css' %}">
     <title>QRCODES</title>
 </head>
 <body>
     <div class="tela"></div>
-        <div class="meio">
-            <div class="borda">
 
-                <h2>QRCODE MAKER!</h2>
+    <div class="meio">
+        <div class="borda">
+
+            <h2>QRCODE MAKER!</h2>
+            <div class="arqs">
+
                 <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <label >NOME DO SEU QRCODE</label><br>
-                <input type="text" name="nome" required><br><br>
-                <label >CONTEÚDO DO QRCODE</label><br>
-                <input type="text" name="link" required><br><br>
-                <button type="submit">GERAR QRCODE</button>
-            </form>
-            {% if out %}
-            <p><a href="{{ out }}" download onclick="this.style.display='none'">BAIXAR CODIGO QR</a></p>
-            
-            {% endif %}
-        </div>
-            
-            
+                    {% csrf_token %}
+                    <label >NOME DO SEU QRCODE</label><br>
+                    <input type="text" name="nome" required><br><br>
+                    <label >CONTEÚDO DO QRCODE</label><br>
+                    <input type="text" name="link" required><br><br>
+                    <button type="submit">GERAR QRCODE</button>
+                </form>
+                {% if out|lower|slice:"-4:" == ".png" %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button type="submit" name="sai">CRIAR OUTRO QRCODE</button>
+                </form>
+            </div>
         </div>
     </div>
+    <div class="QR">
+        <h1>Seu codigo QR:<p><a href="{{ out }}" download onclick="this.style.display='none'">BAIXAR CODIGO QR!</a></p></h1><img src="{{ out }}" alt="Fundo">
+    </div>
+    
+    {% endif %}
 </body>
 </html>

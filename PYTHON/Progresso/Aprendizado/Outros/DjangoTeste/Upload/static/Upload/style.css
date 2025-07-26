@@ -1,21 +1,32 @@
 body{
-    background-image: url('https://codigosdebarrasbrasil.com.br/wp-content/uploads/2019/09/codigo_qr-300x300.png');
-    background-position: center;
+    background-image: url("/static/Upload/FUNDONOVO.png");
+    background-position-y: -100px;
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
     font-family: Arial;
 }
 
 .tela{
-    background-color: white;
-    opacity: 10%;
-    margin: -10px;
+    background-color: gray;
+    background-size: cover;
+    top: 0;
+    left: 0;
+    opacity: 20%;
     z-index: 1;
     position: fixed;
-    width: 1500px;
-    height: 1000px;
+    width: 100vw;
+    height: 100vw;
 }
+
+h2{
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-style: normal;
+}
+
 .meio{
     position: relative;
-    z-index: 10;
+    z-index: 2;
     padding: 80px;
     text-align: center;
     margin: auto;
@@ -27,8 +38,52 @@ body{
     background-color: white;
     padding: 30px;
     margin: auto;
-    width: 20%;
+    position: relative;
+    width: 22%;
     height: 30%;
     border-radius: 40px;
     box-shadow: 0 0 10p gray;
+    z-index: 3;
+}
+
+.arqs{
+    font-family: "Outfit", sans-serif;
+    font-style: normal;
+    font-size: 125%;
+    z-index: 4;
+}
+
+.QR{
+    background-color: white;
+    border-radius: 40px;
+    position: absolute;
+    align-items: center;
+    margin-top: -35%;
+    margin-left: 2%;
+    width: 32%;
+    height: 100%;
+    z-index: 5;
+}
+
+h1{
+    margin-top: 5%;
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-style: normal;
+    font-size: x-large;
+    text-align: center;
+    position: relative;
+    z-index: 7;
+}
+
+p{
+    position: relative;
+    margin-top: 90%;
+}
+
+img{
+    position: absolute;
+    margin-top: -110%;
+    border-radius: 40px;
+    width: 100%;
+    z-index: 6;
 }
