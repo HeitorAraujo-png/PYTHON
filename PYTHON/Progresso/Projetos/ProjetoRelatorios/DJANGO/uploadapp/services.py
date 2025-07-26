@@ -1,43 +1,58 @@
 import pandas as pd
+from django.core.files.storage import default_storage
+from django.conf import settings
+import unicodedata
+import re
 import os
-import openpyxl
-                
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+
 class Relatorio:
-    
+
     def __init__(self):
-        if os.path.exists('relatorio_atualizado.xlsx'):
-            os.remove('relatorio_atualizado.xlsx')
+        self.caminho_relatorio = os.path.join(settings.MEDIA_ROOT, 'relatorio_atualizado.xlsx')
+        self.dpt = os.path.join(settings.MEDIA_ROOT, 'DPTDIA.csv')
+        if os.path.exists(self.dpt):
+            os.remove(self.dpt)
+        if os.path.exists(self.caminho_relatorio):
+            os.remove(self.caminho_relatorio)
+
+
+    def retorna(self, arquivo1, arquivo2):
+        nome1 = self.limpar_nome(arquivo1.name)
+        nome2 = self.limpar_nome(arquivo2.name)
+        self.caminho1 = default_storage.save(nome1, arquivo1)
+        self.caminho2 = default_storage.save(nome2, arquivo2)
         self.Converter()
-        self.LinkPathPTD = r'CSV_ARQ\DPTDIA.csv'
+        self.LinkPathPTD = os.path.join(settings.MEDIA_ROOT, 'DPTDIA.csv')
         self.departamento = pd.read_csv(self.LinkPathPTD, encoding='latin1')
-        self.replace()
         self.dias = self.Dias()
+        self.Add()
         self.centros = self.CentroCustos()
-        self.LinkPathRelatorio = r'basic\relatorio.csv'
-        self.relatorio = pd.read_csv(self.LinkPathRelatorio, encoding='latin1')
-        
+        self.relatorio = pd.read_csv((os.path.join(settings.BASE_DIR, 'relatorio.csv')), encoding='latin1')
+
+    def limpar_nome(self, nome):
+        nome = unicodedata.normalize('NFKD', nome).encode('ASCII', 'ignore').decode('ASCII')
+        nome = re.sub(r'[^\w\-_\. ]', '_', nome)
+        return nome
+
+
     def Converter(self):
-        relatorio1 = pd.read_excel(r'RelatoriosMensaisEXCEL\Dptdia1-15.xltx', parse_dates=["DATA"])
-        relatorio2 = pd.read_excel(r'RelatoriosMensaisEXCEL\Dptdia16-31.xlsx', parse_dates=["DATA"])
+        self.caminho1 = default_storage.path(self.caminho1)
+        self.caminho2 = default_storage.path(self.caminho2)
+        relatorio1 = pd.read_excel(self.caminho1, parse_dates=["DATA"])
+        relatorio2 = pd.read_excel(self.caminho2, parse_dates=["DATA"])
         relatorio1['DATA'] = relatorio1['DATA'].dt.strftime('%d/%m/%y')
         relatorio2['DATA'] = relatorio2['DATA'].dt.strftime('%d/%m/%y')
-        relatorio1.to_csv(r'CSV_ARQ\DPT01-15.csv', index=False)
-        relatorio2.to_csv(r'CSV_ARQ\DPT16-31.csv', index=False)
-        relatorio = pd.concat([relatorio1, relatorio2], ignore_index=True)
-        relatorio.to_csv(r'CSV_ARQ\DPTDIA.csv')   
+        self.relatorio = pd.concat([relatorio1, relatorio2], ignore_index=True)
+        caminho_dptdia_csv = os.path.join(settings.MEDIA_ROOT, 'DPTDIA.csv')
+        self.relatorio.to_csv(caminho_dptdia_csv, encoding='latin1', index=False)
 
-    def replace(self):
-        with open(self.LinkPathPTD, 'r', encoding='latin1') as arq:
-            if ';' in arq.read():
-                with open(self.LinkPathPTD, 'w', encoding='latin1') as csv:
-                    arq = arq.read()
-                    for line in arq:
-                        csv.write(line.replace(';', ','))
-        
+
     def Add(self):
-        with open(self.LinkPathRelatorio, 'r', encoding='latin1') as arq:
+        with open((os.path.join(settings.BASE_DIR, 'relatorio.csv')), 'r', encoding='latin1') as arq:
             arq = arq.readlines()
-            with open(self.LinkPathRelatorio, 'w', encoding='latin1') as csv:
+            with open((os.path.join(settings.BASE_DIR, 'relatorio.csv')), 'w', encoding='latin1') as csv:
                 for i in arq:
                     csv.write(f'{i[:i.find(',') + 1]}{','.join(self.dias)},{i[i.find('Total'):]}')
 
@@ -45,7 +60,7 @@ class Relatorio:
         return list(dict.fromkeys(sorted(lista)))
 
     def Dias(self):
-        return self.remove(list(self.departamento.DATA))
+        return self.remove(list(self.departamento['DATA']))
 
     def CentroCustos(self):
         centro = self.departamento['C.C']
@@ -94,18 +109,25 @@ class Relatorio:
                 soma += qtd
             money += soma
         return money
+
     def ArrumarColunas(self):
-        lc = self.relatorio.columns
-        workbook = openpyxl.load_workbook('relatorio_atualizado.xlsx')
+        workbook = load_workbook(self.caminho_relatorio)
         sheet = workbook.active
-        for i in lc:
-            sheet.column_dimensions[i].auto_size = True
-        if os.path.exists('relatorio_atualizado.xlsx'):
-            os.remove('relatorio_atualizado.xlsx')
-        workbook.save('relatorio_atualizado.xlsx')
-            
+        for col in sheet.columns:
+            max_length = 0
+            column = col[0].column_letter
+            for cell in col:
+                try:
+                    if cell.value:
+                        max_length = max(max_length, len(str(cell.value)))
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column].width = adjusted_width
+
+        workbook.save(self.caminho_relatorio)
+
     def Converte(self):
-        self.Add()
         linhas = []
         money = self.money()
         atual = {'DPT': 0}
@@ -134,17 +156,23 @@ class Relatorio:
                 qtd = len(self.departamento[(self.departamento['C.C'] == cc) & (self.departamento['DATA'] == dia)])
                 nova_linha[dia] = qtd
                 soma += qtd
-            valor = float(f'{(soma * 20) / float(atual['Valor total']):.3f}')
-            nova_linha['%'] = f'{valor}%'
+            valor = float(f'{(soma * 20) / float(atual['Valor total'])}')
+            nova_linha['%'] = f'{(valor * 100):.2f}%'
             pct.append(valor)
             nova_linha['Total'] = soma
-            nova_linha['Valor total'] = f'R$ {soma * 20:.2f}'
+            nova_linha['Valor total'] = f'R$ {float(soma * 20)}'
             self.relatorio = pd.concat([self.relatorio, pd.DataFrame([nova_linha])], ignore_index=True)
-        
-        atual['%'] = f'%{sum(pct) * 100}'
+
+        atual['%'] = f'{round(sum(pct) * 100)}%'
         self.relatorio = pd.concat([self.relatorio, pd.DataFrame([atual])], ignore_index=True)
         self.relatorio = pd.concat([self.relatorio, pd.DataFrame([linhas])], ignore_index=True)
-        self.relatorio.to_csv(r'CSV_ARQ\relatorio_atualizado.csv', index=False, encoding='latin1')
-        self.relatorio.to_excel(r"relatorio_atualizado.xlsx", index=False)
-        print(self.ArrumarColunas())
-        
+        self.relatorio.to_excel(os.path.join(settings.MEDIA_ROOT,'relatorio_atualizado.xlsx'), index=False)
+        self.ArrumarColunas()
+        caminho1_full = os.path.join(settings.MEDIA_ROOT, self.caminho1)
+        if os.path.exists(caminho1_full):
+            os.remove(caminho1_full)
+        caminho2_full = os.path.join(settings.MEDIA_ROOT, self.caminho2)
+        if os.path.exists(caminho2_full):
+            os.remove(caminho2_full)
+        nome_saida = 'relatorio_atualizado.xlsx'
+        return f'{nome_saida}'

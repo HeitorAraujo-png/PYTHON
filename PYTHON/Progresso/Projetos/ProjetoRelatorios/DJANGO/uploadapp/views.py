@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
-from .models import Pessoa
+from django.shortcuts import render
 import pandas as pd
-import os
 from .services import Relatorio
+from django.conf import settings
 
 def upload_view(request):
     output_url = None
@@ -11,7 +10,10 @@ def upload_view(request):
         rel1 = request.FILES['relatorio1']
         rel2 = request.FILES['relatorio2']
 
-        relatorio = Relatorio(rel1, rel2)
+        relatorio = Relatorio()
+        relatorio.retorna(rel1, rel2)
         output_url = relatorio.Converte()
 
-    return render(request, 'uploadapp/upload.html', {'output_url': output_url})
+    return render(request, 'uploadapp/upload.html', {
+        'output_url': f'{settings.MEDIA_URL}{output_url}'}
+        )
