@@ -1,13 +1,13 @@
-body{
+body {
     background-image: url("/static/Upload/FUNDONOVO.png");
     background-position-y: -100px;
     position: relative;
-    background-repeat: no-repeat;
     background-size: cover;
     font-family: Arial;
+    z-index: 0;
 }
 
-.tela{
+.tela {
     background-color: gray;
     background-size: cover;
     top: 0;
@@ -19,12 +19,7 @@ body{
     height: 100vw;
 }
 
-h2{
-    font-family: "Special Gothic Expanded One", sans-serif;
-    font-style: normal;
-}
-
-.meio{
+.meio {
     position: relative;
     z-index: 2;
     padding: 80px;
@@ -34,7 +29,13 @@ h2{
     margin-right: auto;
     width: auto;
 }
-.borda{   
+.titulo {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-style: normal;
+}
+
+
+.borda {
     background-color: white;
     padding: 30px;
     margin: auto;
@@ -46,44 +47,72 @@ h2{
     z-index: 3;
 }
 
-.arqs{
+.arqs {
     font-family: "Outfit", sans-serif;
     font-style: normal;
     font-size: 125%;
     z-index: 4;
 }
 
-.QR{
-    background-color: white;
-    border-radius: 40px;
+.localQR {
     position: absolute;
-    align-items: center;
-    margin-top: -35%;
-    margin-left: 2%;
-    width: 32%;
-    height: 100%;
+    padding: 50px;
+    top: -10px;
+    left: 30px;
+}
+
+.Background {
+    position: relative;
+    background-color: white;
+    text-align: center;
+    border-radius: 40px;
     z-index: 5;
 }
 
-h1{
-    margin-top: 5%;
+.Background1 {
+    position: relative;
+    background-color: white;
+    text-align: center;
+    border-radius: 40px;
+    z-index: 5;
+}
+
+.tituloQR {
     font-family: "Special Gothic Expanded One", sans-serif;
     font-style: normal;
-    font-size: x-large;
-    text-align: center;
-    position: relative;
+    font-size: small;
+    padding: 2%;
+    position: relative;  
     z-index: 7;
 }
 
-p{
-    position: relative;
-    margin-top: 90%;
+.QRlinks {
+    font-size: small;
+    margin-top: -5%;
+    padding: 7%;
 }
 
-img{
-    position: absolute;
-    margin-top: -110%;
-    border-radius: 40px;
-    width: 100%;
+.QRimg {
+    position: relative;
     z-index: 6;
+}
+
+.localLER {
+    position: fixed;
+    z-index: 9;
+    padding: 50px;
+    top: -10px;
+    left: 840px;
+}
+
+.info{
+    position: relative;
+    font-size: medium;
+    justify-items: auto;
+    text-align: left;
+    font-weight: bold;
+}
+
+.tamanho {
+    padding: 20px;
 }
