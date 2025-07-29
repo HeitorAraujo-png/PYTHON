@@ -1,0 +1,41 @@
+.meio {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bordas {
+    padding: 30px;
+    padding-left: 90px;
+    padding-right: 90px;
+    background-color: rgb(204, 190, 190);
+    border-radius: 10px;
+}
+
+.caixa {
+    text-align: center;
+    font-family: "Special Gothic Expanded One", sans-serif;
+}
+
+.texto {
+    font-size: x-small;
+}
+
+.links {
+    margin-top: 30px;
+}
+
+.r1 {
+    position: absolute;
+    margin-top: -18px;
+    left: 80%;
+    transform: translate(-50%, -50%);
+}
+
+.r2 {
+    position: absolute;
+    margin-top: -18px;
+    right: 80%;
+    transform: translate(50%, -50%);
+}
