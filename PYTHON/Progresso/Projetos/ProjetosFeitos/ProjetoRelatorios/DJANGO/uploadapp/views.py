@@ -15,5 +15,5 @@ def upload_view(request):
         output_url = relatorio.Converte()
 
     return render(request, 'uploadapp/upload.html', {
-        'output_url': f'{settings.MEDIA_URL}{output_url}'}
+        'output_url': f'{settings.MEDIA_URL}{output_url}'if output_url else ""}
         )
