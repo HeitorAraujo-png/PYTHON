@@ -5,7 +5,7 @@ from .services import *
 
 # Create your views here.
 
-def clase(request):
+def Geracao(request):
     relatorio = relatorioValores = None
     
     if request.method == 'POST':
