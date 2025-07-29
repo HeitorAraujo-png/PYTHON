@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="pt-rb">
+
 <head>
     <meta charset="UTF-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&family=Special+Gothic+Expanded+One&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{% static 'mvp/style.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <div class="meio">
         <div class="bordas">
@@ -17,20 +21,22 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="texto">
-                        <label><h2>ADICIONE SEU ARQUIVO CSV:</h2></label>
+                        <label>
+                            <h2>ADICIONE SEU ARQUIVO CSV:</h2>
+                        </label>
                     </div>
                     <input type="file" name="ArquivoCsv"><br><br>
                     {% if not relatorio %}
-                        <button type="submit" onclick="">Enviar</button><br>
+                    <button type="submit" onclick="">Enviar</button><br>
                     {% endif %}
                     <div class="links">
                         {% if relatorio %}
-                            <div class="r1">
-                               <p><a href="{{ relatorio }}" download>Relatorio Geral</a></p>
-                            </div>
-                            <div class="r2">
-                                <p><a href="{{ relatorioVALORES }}" download>Relatorio Financeiro</a></p>
-                            </div>
+                        <div class="r1">
+                            <p><a href="{{ relatorio }}" download>Relatorio Geral</a></p>
+                        </div>
+                        <div class="r2">
+                            <p><a href="{{ relatorioVALORES }}" download>Relatorio Financeiro</a></p>
+                        </div>
                         {% endif %}
                     </div>
                 </form>
@@ -38,4 +44,5 @@
         </div>
     </div>
 </body>
+
 </html>
