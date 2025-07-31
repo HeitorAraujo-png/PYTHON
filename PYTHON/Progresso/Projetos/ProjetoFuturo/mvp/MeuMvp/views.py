@@ -12,8 +12,8 @@ def Geracao(request):
         post = request.FILES['ArquivoCsv']
         fileDS = default_storage.save(f'{post}',post)
         path = os.path.join(f'{settings.MEDIA_ROOT}\{fileDS}')
-        Files = Relatorios(path)
-        Geral, Financeiro = Files.Separa()
+        Files = Geral(path)
+        Files.MakeArq()
         relatorio = f'{settings.MEDIA_URL}{Geral}'
         relatorioValores = f'{settings.MEDIA_URL}{Financeiro}'
         
