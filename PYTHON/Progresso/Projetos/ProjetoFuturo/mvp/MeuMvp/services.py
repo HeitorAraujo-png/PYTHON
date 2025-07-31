@@ -3,21 +3,6 @@ from openpyxl import *
 from django.conf import settings
 import os
 
-class Relatorios:
-    
-    def __init__(self, files):
-        self.fileG = self.fileF = pd.read_csv(files)
-    
-    def Separa(self):
-        Geral = 'RelatorioGeral.xlsx'
-        Financeiro = 'RelatorioFinanceiro.xlsx'
-        self.fileG.to_excel(os.path.join(settings.MEDIA_ROOT, Geral), index=False)
-        self.fileF.to_excel(os.path.join(settings.MEDIA_ROOT, Financeiro), index=False)
-        return Geral, Financeiro
-    
-import pandas as pd
-from openpyxl import load_workbook
-import os
 # * cd PYTHON\testes\Testando\SomaNoCsv
  
 # ! = IMPORTANTE
@@ -25,36 +10,51 @@ import os
 # TODO = A FAZER
 # * = AVISOS
 
+
+# class Relatorios:
+    
+#     def __init__(self, files):
+#         self.fileG = self.fileF = pd.read_csv(files)
+    
+#     def Separa(self):
+#         Geral = 'RelatorioGeral.xlsx'
+#         Financeiro = 'RelatorioFinanceiro.xlsx'
+#         self.fileG.to_excel(os.path.join(settings.MEDIA_ROOT, Geral), index=False)
+#         self.fileF.to_excel(os.path.join(settings.MEDIA_ROOT, Financeiro), index=False)
+#         return Geral, Financeiro
+
+
 class Geral:
     
-    def __init__(self, PathXlsx):
+    def __init__(self, PathXlsx, nome):
         self.Path = PathXlsx
+        self.nome = nome
         
     def MakeArq(self):
         if self.Path.endswith('.xlsx'):
-            xlsx = pd.read_excel(self.Path)
+            self.csv = pd.read_excel(self.Path)
+            self.csv.to_csv(os.path.join(settings.MEDIA_ROOT, 'Arq.csv'), index=True, encoding='utf-8', sep=';')
         elif self.Path.endswith('.csv'):
-            xlsx = pd.read_csv(self.Path, sep=';')
+            self.csv = pd.read_csv(self.Path, sep=';')
+            self.csv.to_csv(os.path.join(settings.MEDIA_ROOT, 'Arq.csv'), index=True, encoding='utf-8', sep=';')
         else: return 'erro'
-        self.csv = pd.read_csv(os.path.join(settings.MEDIA_ROOT, Geral), encoding='utf-8', sep=';')
-        self.csv.to_csv(os.path.join(settings.MEDIA_ROOT, Geral), index=True, encoding='utf-8', sep=';')
         
     def Tratamento(self):
         lista = {}
-        Geral = pd.DataFrame()
+        self.Geral = pd.DataFrame()
         for i, rows in self.csv.iterrows():
             lista['cod'] = rows['cod']
             lista['nome'] = rows['nome']
             lista['cpf'] = rows['cpf']
-            Geral = pd.concat([Geral, pd.DataFrame([lista])], ignore_index=True)
-            print(lista)
-        Geral.to_csv(os.path.join(settings.MEDIA_ROOT, 'DeuCerto.csv'), index=True)
+            self.Geral = pd.concat([self.Geral, pd.DataFrame([lista])], ignore_index=False)
+        self.Geral.to_excel(os.path.join(settings.MEDIA_ROOT, 'DeuCerto.xlsx'), index=False)
+        return 'DeuCerto.xlsx'
             
     def LGPD(self):
         conteudo = os.listdir('arquivos/')
-        arquivos = [item for item in conteudo if os.path.isfile(os.path.join('arquivos/', item))]
+        arquivos = [item for item in conteudo if os.path.isfile(os.path.join(settings.MEDIA_URL, item))]
         for i in arquivos:
-            os.remove(f'arquivos/{i}')
+            os.remove(f'{os.path.join(settings.MEDIA_URL, i)}')
             
             
         

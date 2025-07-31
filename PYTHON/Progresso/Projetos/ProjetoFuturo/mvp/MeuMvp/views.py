@@ -11,14 +11,17 @@ def Geracao(request):
     if request.method == 'POST':
         post = request.FILES['ArquivoCsv']
         fileDS = default_storage.save(f'{post}',post)
+        nome = post
         path = os.path.join(f'{settings.MEDIA_ROOT}\{fileDS}')
-        Files = Geral(path)
-        Files.MakeArq()
-        relatorio = f'{settings.MEDIA_URL}{Geral}'
+        Files = Geral(path, nome)
+        if Files.MakeArq():
+            relatorio = 'erro'
+        
+        relatorio = Files.Tratamento()
         relatorioValores = f'{settings.MEDIA_URL}{Financeiro}'
         
     return render(request, 'mvp/index.html', {
-            'relatorio': relatorio,
+            'relatorio': f'{settings.MEDIA_URL}{relatorio}' if relatorio else '',
             'relatorioVALORES': relatorioValores
     }
                   )
