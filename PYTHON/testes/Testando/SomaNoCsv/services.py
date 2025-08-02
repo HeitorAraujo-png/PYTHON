@@ -1,6 +1,7 @@
 import pandas as pd
 from openpyxl import load_workbook
 import os
+import system32utils
 # * cd PYTHON\testes\Testando\SomaNoCsv
  
 # ! = IMPORTANTE
