@@ -1,4 +1,4 @@
- 👋 Olá!
+' 👋 Olá!
 
  Nesse repositorio esta todo meu apredizado e projetos em python!
 
@@ -30,6 +30,6 @@
    📫 Entre em contato
 
 - 💼 [LinkedIn](https://www.linkedin.com/in/heitorobaraujo/)
-- ✉️ [Email](mailto:hbrandaooliveira4@gmail.com)
+- ✉️ [Email](mailto:heitoraraujodev@gmail.com)
 
 Sinta-se à vontade para me seguir, dar sugestões ou iniciar uma colaboração. Vamos criar algo incrível juntos! 💻⚡
